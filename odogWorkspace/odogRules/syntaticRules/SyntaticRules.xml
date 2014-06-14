@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE design PUBLIC "-//ODOGDESIGN//DTD//EN" ""><design name="SyntaticRules">
+<configuration islibrary="true">
+</configuration>
+<artifact name="noinputoutputdport" type="rule" url="file:noinputoutputDport.rule" version="1185299251091">
+  <summary><![CDATA[Data port must be either input or output.]]></summary>
+</artifact>
+<artifact name="aactornodport" type="rule" url="file:aactornodport.rule" version="1188925693206">
+  <summary><![CDATA[Actor must have at least one port on its interface, or each version must contain at least one port.]]></summary>
+</artifact>
+<artifact name="hasAtomicVersion" type="rule" url="file:hasversion1.rule" version="1185299275928">
+  <summary><![CDATA[Atomic actor must have at least one version.]]></summary>
+</artifact>
+<artifact name="hasTopologyVersion" type="rule" url="file:hasversion2.rule" version="1185299293979">
+  <summary><![CDATA[Topology must have at least one version.]]></summary>
+</artifact>
+<artifact name="validattribute" type="rule" url="file:validattribute.rule" version="1188925745381">
+  <summary><![CDATA[Invalid classification for attribute.]]></summary>
+</artifact>
+<artifact name="connectoionwithinputport" type="rule" url="file:connectoionwithinputport.rule" version="1185303259088">
+  <summary><![CDATA[Each connection must have at least one input port.]]></summary>
+</artifact>
+<artifact name="connectionwithoutputport" type="rule" url="file:connectionwithoutputport.rule" version="1188925792205">
+  <summary><![CDATA[Each connection must have one and only one port.]]></summary>
+</artifact>
+<artifact name="attributewithdatahasvalue" type="rule" url="file:dataattrnovalue.rule" version="1188925843476">
+  <summary><![CDATA[Any attribute tagged as with data must have at least one associated value.]]></summary>
+</artifact>
+<artifact name="multipleportexport" type="rule" url="file:multipleportexport.rule" version="1188926297698">
+  <summary><![CDATA[Cannot export the same port more than one time.]]></summary>
+</artifact>
+<artifact name="attributemultiplevalues2" type="rule" url="file:multiplevalueattr2.rule" version="1199193617661">
+  <summary><![CDATA[There cannot be distinct values for the same attribute under the same version or actor instance.]]></summary>
+</artifact>
+<artifact name="allactorswithversions" type="rule" url="file:allActorInstancesWithVersions.rule" version="1199193648407">
+  <summary><![CDATA[Every actor instance in a topology must have a version selected via a defver]]></summary>
+</artifact>
+<artifact name="allVersionAInstancesWithVer" type="rule" url="file:allVersionAInstancesWithVer.rule" version="1199193659183">
+  <summary><![CDATA[All actor instances contained in every version must have a defined version.]]></summary>
+</artifact>
+<artifact name="portwithouttype" type="rule" url="file:portwithouttype.rule" version="1199194827897">
+  <summary><![CDATA[Missing data type for data port.]]></summary>
+</artifact>
+<artifact name="exclusiveConNames" type="rule" url="file:exclusiveConNames.rule" version="1201900122353">
+  <summary><![CDATA[Atomic component has at least 2 connections with the same name linked to its ports.]]></summary>
+</artifact>
+</design>

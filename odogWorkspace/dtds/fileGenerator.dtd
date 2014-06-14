@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT fileGenerator (text | argument)*>
+
+<!ELEMENT text (#PCDATA)>
+
+<!ELEMENT argument EMPTY>
+<!ATTLIST argument name CDATA #REQUIRED>

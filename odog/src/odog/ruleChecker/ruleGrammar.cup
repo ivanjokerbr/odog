@@ -1,0 +1,363 @@
+package odog.ruleChecker;
+
+import java_cup.runtime.*;
+import java.util.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+
+import odog.syntax.Nodes.Node;
+
+action code {:
+/* 
+ * Copyright (c) 2006-2014, Ivan "Joker"
+ * All rights reserved.
+ *
+ * This software is open-source under GNU General Public License, version 2 
+ * see LICENSE file
+ */
+       public Hashtable<String, Function> functionDefs = new Hashtable<String, Function>();
+:}
+
+parser code {:
+
+   public Hashtable<String,Function> getFunctionDefs() {
+       return action_obj.functionDefs;
+   }
+:}
+
+terminal DPORT;
+terminal ACOMP;
+terminal ATTR;
+terminal TOPOLOGY;
+terminal COMPONENTINSTANCE;
+terminal ATTRCLASS;
+terminal VER;
+terminal HVER;
+terminal VALUE;
+terminal REQSERV;
+terminal METHOD;
+terminal CONNECTION;
+terminal EXPORTEDPORT;
+terminal DEFVER;
+
+terminal PT_QUAL;
+terminal EX_QUAL;
+terminal EX_AR;
+terminal EX_CM;
+terminal DOT;
+terminal LPAR;
+terminal RPAR;
+terminal AND;
+terminal OR;
+terminal NOT;
+terminal IMPLY;
+terminal IFONLYIF;
+terminal EQ;
+terminal DIFF;
+terminal GT;
+terminal LT;
+terminal GE;
+terminal LE;
+terminal LBRAC;
+terminal RBRAC;
+terminal String IDENTIFIER;
+terminal String STRING_LITERAL;
+terminal SEMICOLON;
+terminal COLON;
+
+/* Non-terminals */
+non terminal  DefaultMutableTreeNode  rule;
+non terminal  DefaultMutableTreeNode  conditionalExpr;
+non terminal  DefaultMutableTreeNode  comparisonExpr;
+non terminal  DefaultMutableTreeNode  compElement;
+non terminal  DefaultMutableTreeNode  attributeSpecification;
+non terminal  String                  completeName;
+non terminal  DefaultMutableTreeNode  node;
+non terminal  Integer                 nodeType;
+non terminal  DefaultMutableTreeNode  or_conditionalExpr;
+non terminal  DefaultMutableTreeNode  and_conditionalExpr;
+non terminal  DefaultMutableTreeNode  imply_conditionalExpr;
+non terminal  DefaultMutableTreeNode  ifonlyif_conditionalExpr;
+non terminal  DefaultMutableTreeNode  quantifierExpression;
+non terminal  DefaultMutableTreeNode  pathExpression;
+non terminal                          function_def;
+non terminal  LinkedList              parameter_list;
+non terminal  DefaultMutableTreeNode  function_call;
+
+/* Precedences */
+
+/* The grammar */
+
+start with rule;
+
+rule ::= conditionalExpr:expr {: RESULT = expr; :}
+         |
+         function_def SEMICOLON rule:expr {: RESULT = expr; :}
+        ;
+
+function_def ::= IDENTIFIER:name LPAR parameter_list:list RPAR EQ 
+                     conditionalExpr:expr 
+        {:
+              Function f = new Function(TreeNode.FUNCTION_DEF, name, 
+                  list.toArray(), expr);
+              functionDefs.put(name, f);
+        :}
+        ;
+
+parameter_list ::= IDENTIFIER:id {: LinkedList list = new LinkedList(); list.add(id); RESULT = list; :}
+                   |
+                   parameter_list:l COLON IDENTIFIER:id2 {:
+                       LinkedList list = new LinkedList(); 
+                       list.addAll(l);                        
+                       list.add(id2);
+                       RESULT = list; 
+                   :}
+                   ;
+
+// Varios tipos de operacoes condicionais, associa booleano
+conditionalExpr ::= 
+                    NOT LPAR conditionalExpr:expr RPAR {:
+                        Logical comp = new Logical(Logical.NOT);
+                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(comp);
+                        node.add(expr);
+                        RESULT = node;
+                    :}
+                    |
+                    or_conditionalExpr:expr {:
+                        RESULT = expr;
+                    :}                        
+                    ;
+
+// Expressao Condicionais, associa valor booleano
+or_conditionalExpr ::= and_conditionalExpr:ex {:
+                           RESULT = ex;
+                       :} 
+                       | 
+                       or_conditionalExpr:ex1 OR and_conditionalExpr:ex2 {: 
+                            Logical l = new Logical(Logical.OR);
+                            DefaultMutableTreeNode n = new DefaultMutableTreeNode(l);
+                            n.add(ex1);
+                            n.add(ex2);
+                            RESULT = n;
+                       :}
+                       ;
+
+and_conditionalExpr ::= imply_conditionalExpr:ex {: RESULT = ex; :}
+                        |
+                        and_conditionalExpr:ex1 AND imply_conditionalExpr:ex2 {:
+                             Logical l = new Logical(Logical.AND);
+                             DefaultMutableTreeNode n = new DefaultMutableTreeNode(l);
+                             n.add(ex1);
+                             n.add(ex2);
+                             RESULT = n;
+                        :}
+                        ;
+
+imply_conditionalExpr ::= ifonlyif_conditionalExpr:ex {: RESULT = ex; :}
+                          |
+                          imply_conditionalExpr:ex1 IMPLY ifonlyif_conditionalExpr:ex2 {:
+                              Logical l = new Logical(Logical.IMPLY);
+                              DefaultMutableTreeNode n = new DefaultMutableTreeNode(l);
+                              n.add(ex1);
+                              n.add(ex2);
+                              RESULT = n;
+                          :}
+                          ;
+
+ifonlyif_conditionalExpr ::= comparisonExpr:ex {: RESULT = ex; :}
+                             |
+                             ifonlyif_conditionalExpr:ex1 IFONLYIF comparisonExpr:ex2 {:
+                                 Logical l = new Logical(Logical.IFONLYIF);
+                                 DefaultMutableTreeNode n = new DefaultMutableTreeNode(l);
+                                 n.add(ex1);
+                                 n.add(ex2);
+                                 RESULT = n;
+                             :}
+                             ;
+
+// operador de comparacao entre valores, associa booleano
+comparisonExpr ::= pathExpression:expr {: RESULT = expr; :}
+                   |
+                   compElement:n1 DIFF compElement:n2 {:
+                       Comparison node = new Comparison(Comparison.DIFF);
+                       DefaultMutableTreeNode comp = new DefaultMutableTreeNode(node);
+                       comp.add(n1);
+                       comp.add(n2);
+
+                       RESULT = comp;
+                   :}
+                   |
+                   compElement:n1 EQ compElement:n2 {:
+                       Comparison node = new Comparison(Comparison.EQ);
+                       DefaultMutableTreeNode comp = new DefaultMutableTreeNode(node);
+                       
+                       comp.add(n1);
+                       comp.add(n2);
+
+                       RESULT = comp;
+                   :}
+                   |
+                   compElement:n1 LT compElement:n2 {:
+                       Comparison node = new Comparison(Comparison.LT);
+                       DefaultMutableTreeNode comp = new DefaultMutableTreeNode(node);
+                       
+                       comp.add(n1);
+                       comp.add(n2);                       
+
+                       RESULT = comp;
+                   :}
+                   |
+                   compElement:n1 GT compElement:n2 {:
+                       Comparison node = new Comparison(Comparison.GT);
+                       DefaultMutableTreeNode comp = new DefaultMutableTreeNode(node);
+                       
+                       comp.add(n1);
+                       comp.add(n2);                       
+
+                       RESULT = comp;
+                   :}
+                   |
+                   compElement:n1 GE compElement:n2 {:
+                       Comparison node = new Comparison(Comparison.GE);
+                       DefaultMutableTreeNode comp = new DefaultMutableTreeNode(node);
+                       
+                       comp.add(n1);
+                       comp.add(n2);                       
+
+                       RESULT = comp;
+                       
+                   :}
+                   |
+                   compElement:n1 LE compElement:n2 {:
+                       Comparison node = new Comparison(Comparison.LE);
+                       DefaultMutableTreeNode comp = new DefaultMutableTreeNode(node);
+                       
+                       comp.add(n1);
+                       comp.add(n2);
+
+                       RESULT = comp;
+                   :}                   
+                   ;
+
+// Obtem o valor e tipo de um campo selecionado de um no, ou uma expressao
+// literal (de um tipo associado)
+compElement ::= attributeSpecification:attrs {: RESULT = attrs; :}
+                |                
+                STRING_LITERAL:v {: 
+                    RESULT = new DefaultMutableTreeNode(new StringLiteral(v)); 
+                :}
+              ;
+
+// Determina o campo do no(s) selecionado(s)
+attributeSpecification ::= node:nd LBRAC IDENTIFIER:attr RBRAC {:
+                              AttributeSpecification node = new AttributeSpecification(attr);
+                              DefaultMutableTreeNode n = new DefaultMutableTreeNode(node);
+                              n.add(nd);
+                              RESULT = n;
+                        :}
+                        ;
+
+// Associa o nome de um no ou variavel livre
+node ::= completeName:name {:
+             NodeRef ref = new NodeRef(name);
+             DefaultMutableTreeNode node = new DefaultMutableTreeNode(ref);
+             RESULT = node;
+         :}
+        ;
+
+completeName ::= IDENTIFIER:e {: RESULT = e; :}
+                |
+                 completeName:c DOT IDENTIFIER:e 
+                 {: 
+                     RESULT = new String(c + "." + e);
+                 :}
+                ;
+
+pathExpression ::=  quantifierExpression:expr {: RESULT = expr; :}
+                    |
+                    node:n1 EX_AR node:n2 {:
+                        GConnection q = new GConnection(GConnection.AR);
+                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(q);
+
+                        node.add(n1);
+                        node.add(n2);
+                        
+                        RESULT = node;
+                    :}
+                    |
+                    node:n1 EX_CM node:n2 {:
+                        GConnection q = new GConnection(GConnection.CM);
+                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(q);
+
+                        node.add(n1);
+                        node.add(n2);
+
+                        RESULT = node;
+                    :}
+                    ;
+
+quantifierExpression ::= 
+                    function_call:expr {:
+                        RESULT = expr;
+                    :}
+                    |
+                    PT_QUAL DOT 
+                       nodeType:type DOT 
+                       IDENTIFIER:freeVar LPAR conditionalExpr:expr RPAR {:
+                           Quantifier qf = new Quantifier(Quantifier.PT, type.intValue(),
+                               freeVar);
+                           DefaultMutableTreeNode node = new DefaultMutableTreeNode(qf);
+                           node.add(expr);
+                           RESULT = node; 
+                     :}
+                    |
+                    EX_QUAL DOT 
+                       nodeType:type DOT 
+                       IDENTIFIER:freeVar LPAR conditionalExpr:expr RPAR {:
+                         Quantifier qf = new Quantifier(Quantifier.EX, type.intValue(), freeVar);
+                         DefaultMutableTreeNode node = new DefaultMutableTreeNode(qf);
+                         node.add(expr);
+                         RESULT = node;
+                     :}
+                     ;
+
+
+function_call ::=   LPAR conditionalExpr:expr RPAR {:
+                        RESULT = expr;
+                    :}
+                    |
+                    LBRAC IDENTIFIER:id parameter_list:list RBRAC {:
+                        Function f = new Function(TreeNode.FUNCTION_CALL, id, 
+                            list.toArray(), null);
+                        DefaultMutableTreeNode node = new DefaultMutableTreeNode(f);
+                        RESULT = node;
+                    :}
+                    ;
+
+nodeType ::= DPORT {: RESULT = new Integer(Node.DPORT); :}
+             |
+             ACOMP {: RESULT = new Integer(Node.ACOMP); :}
+             |
+             ATTR {: RESULT = new Integer(Node.ATTR); :}
+             |
+             TOPOLOGY {: RESULT = new Integer(Node.TOPOLOGY); :}
+             |
+             COMPONENTINSTANCE {: RESULT = new Integer(Node.COMPONENTINSTANCE); :}
+             |
+             ATTRCLASS {: RESULT = new Integer(Node.ATTRCLASS); :}
+             |
+             VER {: RESULT = new Integer(Node.VER); :}
+             |
+             HVER {: RESULT = new Integer(Node.HVER); :}
+             |
+             VALUE {: RESULT = new Integer(Node.VALUE); :}
+             |
+             REQSERV {: RESULT = new Integer(Node.REQSERV); :}
+             |
+             METHOD {: RESULT = new Integer(Node.METHOD); :}
+             |
+             CONNECTION {: RESULT = new Integer(Node.CONNECTION); :}
+             |
+             EXPORTEDPORT {: RESULT = new Integer(Node.EXPORTEDPORT); :}
+             |
+             DEFVER {: RESULT = new Integer(Node.DEFVER); :}
+             ;

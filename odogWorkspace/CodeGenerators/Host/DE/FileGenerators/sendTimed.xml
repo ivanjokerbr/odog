@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>if(</text><argument name="arg3"/><text> &lt; currentTime) {
+         printf("ERROR!!! Trying to send an event into the past!\n");
+         exit(1);
+      }
+      p = getOdogDataPkg(</text><argument name="arg1"/><text>, </text><argument name="arg2"/><text>);
+      calendar_insert(</text><argument name="arg0"/><text>, p,</text><argument name="arg3"/><text>);
+      prio = (int *) malloc(sizeof(int));
+      *prio = </text><argument name="componentID"/><text>;
+      calendar_insertForGlobalQueue(globalQueue, prio,</text><argument name="arg3"/><text>);
+      if(</text><argument name="arg3"/><text> == currentTime) {
+          DE_zeroTimeEvents = TRUE;
+      }
+</text>
+
+</fileGenerator>

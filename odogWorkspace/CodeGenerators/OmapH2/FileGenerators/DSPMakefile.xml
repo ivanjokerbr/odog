@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+
+TOOLS_DIR = /home/ivan/DSPtools/Linux-DSP-Tools-1.00.00.06
+
+CC = $(TOOLS_DIR)/cgtools/bin/cl55
+AS = $(CC)
+LD = $(CC)
+TOKLI_DIR = /home/ivan/omap/DSPGateway/dspgw-3.3-dsp/tokliBIOS
+
+INCD =	-i$(TOKLI_DIR) \
+	-i$(TOOLS_DIR)/cgtools/include \
+	-i$(TOOLS_DIR)/bios/BIOS-5.03.00.01/ti/bios/include \
+	-i$(TOOLS_DIR)/collateral_pack/c5500/xdais \
+	-i$(TOOLS_DIR)/collateral_pack/c5500/xdais/src/api \]]></text>
+<argument name="includeDirs"/>
+<text><![CDATA[
+
+CFLAGS = -q -ml -pm -O3
+
+LIBD =	-i$(TOKLI_DIR) \
+	-i$(TOOLS_DIR)/cgtools/lib \
+	-i$(TOOLS_DIR)/bios/BIOS-5.03.00.01/ti/bios/lib \
+	-i$(TOOLS_DIR)/collateral_pack/c5500/rtdx/lib \]]></text>
+<argument name="libraryDirs"/>
+<text><![CDATA[
+
+LDFLAGS = -z -q -cr -x -O3 ]]></text>
+<argument name="libraries"/>
+<text><![CDATA[
+
+LIBS = -ltokliBIOS.lib -ldynamicDspFifo.obj
+
+TRGT = mainDsp.out
+
+OBJS =	sysinfo.obj ]]></text>
+<argument name="objects"/>
+<text><![CDATA[
+
+CMDS = mainCmd.cmd
+
+.SUFFIXES: .obj
+
+.c.obj:
+	$(CC) $(CFLAGS) $(INCD) $<
+
+all: $(TRGT)
+
+clean:
+	-rm $(TRGT) $(OBJS)
+
+mainDsp.out: $(OBJS) $(CMDS) $(TOKLI_DIR)/tokliBIOS.lib
+	$(LD) $(LDFLAGS) $(LIBD) $(LIBS) $(OBJS) $(CMDS) -o $@
+
+]]></text>
+
+</fileGenerator>

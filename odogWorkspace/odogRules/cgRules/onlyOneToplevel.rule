@@ -1,0 +1,1 @@
+~(EX.topology.top1 ( EX.topology.top2( EX.attribute.at1( EX.attribute.at2( top1 -> at1 && at1[name] = "Toplevel" && top2 -> at2 && at2[name] = "Toplevel" && top1[fullName] != top2[fullName] && at1[fullName] != at2[fullName])))))

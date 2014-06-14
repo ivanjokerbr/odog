@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>*p2 = DynamicDspFifo_remove(</text><argument name="arg0"/><text>, 
+    </text><argument name="arg1"/><text>);
+        *p3 = </text><argument name="arg0"/><text>->step;
+        </text>
+</fileGenerator>

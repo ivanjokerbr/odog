@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>vec = calendar_getOneEvent(</text><argument name="arg0"/><text>, currentTime);
+    *</text><argument name="arg1"/><text> = vec->data;
+    *</text><argument name="arg2"/><text> = vec->length;
+    free(vec);
+</text>
+
+</fileGenerator>

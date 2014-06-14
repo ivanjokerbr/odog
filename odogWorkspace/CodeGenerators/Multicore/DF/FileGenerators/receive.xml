@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>vec = remove_dynamic_fifo_safe(</text><argument name="arg0"/><text>, 1);
+        *p2 = ((odog_data_pkg *)vec[0])->data;
+        *p3 = ((odog_data_pkg *)vec[0])->length;
+        free(vec[0]);
+        free(vec);
+        fromc = </text><argument name="arg1"/><text>;
+</text>
+</fileGenerator>

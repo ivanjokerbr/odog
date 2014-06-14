@@ -1,0 +1,1 @@
+PT.dport.x( (x[isInput] = "true" && x[isOutput] = "false") || (x[isInput] = "false" && x[isOutput] = "true") )

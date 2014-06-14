@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>p = getOdogDataPkg(</text><argument name="arg1"/><text>, </text><argument name="arg2"/><text>);
+calendar_insert(</text><argument name="arg0"/><text>, p, currentTime);
+</text>
+</fileGenerator>

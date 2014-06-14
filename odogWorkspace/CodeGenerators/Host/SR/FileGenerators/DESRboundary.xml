@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+<fileGenerator>
+<text>
+    if(calendar_canReceive(</text><argument name="outsideSignal"/><text>,</text>
+            <argument name="outsideCurrentTime"/><text>, 1)) {
+        p2 = calendar_getOneEvent(</text><argument name="outsideSignal"/><text>,</text>
+            <argument name="outsideCurrentTime"/><text>);
+        </text>
+<argument name="sendToInputSignals"/><text>
+        free(p2->data);
+        free(p2);
+    }
+    else {
+</text>
+<argument name="absentInputSignals"/><text>
+    }
+</text>
+</fileGenerator>

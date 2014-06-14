@@ -1,0 +1,50 @@
+
+
+TOOLS_DIR = /home/ivan/DSPtools/Linux-DSP-Tools-1.00.00.06
+
+CC = $(TOOLS_DIR)/cgtools/bin/cl55
+AS = $(CC)
+LD = $(CC)
+TOKLI_DIR = /home/ivan/omap/DSPGateway/dspgw-3.3-dsp/tokliBIOS
+
+INCD =	-i$(TOKLI_DIR) \
+	-i$(TOOLS_DIR)/cgtools/include \
+	-i$(TOOLS_DIR)/bios/BIOS-5.03.00.01/ti/bios/include \
+	-i$(TOOLS_DIR)/collateral_pack/c5500/xdais \
+	-i$(TOOLS_DIR)/collateral_pack/c5500/xdais/src/api \
+	-i/home/ivan/odog/odogWorkspace/CodeGenerators/OmapH2/DF/library \
+	-i/home/ivan/odog/odogWorkspace/CodeGenerators/library/
+
+
+CFLAGS = -q -ml -pm -O3
+
+LIBD =	-i$(TOKLI_DIR) \
+	-i$(TOOLS_DIR)/cgtools/lib \
+	-i$(TOOLS_DIR)/bios/BIOS-5.03.00.01/ti/bios/lib \
+	-i$(TOOLS_DIR)/collateral_pack/c5500/rtdx/lib \
+	-i/home/ivan/odog/odogWorkspace/CodeGenerators/OmapH2/DF/library \
+	-i/home/ivan/odog/odogWorkspace/CodeGenerators/library/
+
+
+LDFLAGS = -z -q -cr -x -O3 
+
+LIBS = -ltokliBIOS.lib
+
+TRGT = mainDsp.out
+
+OBJS =	dynamicDspFifo.obj
+
+CMDS = mainCmd.cmd
+
+.SUFFIXES: .obj
+
+.c.obj:
+	$(CC) $(CFLAGS) $(INCD) $<
+
+all: $(TRGT)
+
+clean:
+	-rm $(TRGT) $(OBJS)
+
+mainDsp.out: $(OBJS)
+

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[#include <stdlib.h>
+#include <stdio.h>
+#include <calendarQueue.h>
+#include "copyData.h"
+]]></text>
+
+<argument name="instanceExecutionMethods"/>
+<argument name="signals"/>
+
+<text>extern int DE_zeroTimeEvents;
+
+static int
+numberOfConnections(char *port) {
+</text>
+
+<argument name="numberOfConnectionsBody"/>
+<text>} 
+
+static char *
+nameOfConnection(char *port, int number) {
+</text>
+<argument name="nameOfConnectionBody"/>
+<text>
+    return NULL;
+}
+
+extern double currentTime;
+extern calendarQueue_t *globalQueue;
+
+static int *prio;
+
+static void
+receive(char *p1, void **p2, size_t *p3) {
+odog_data_pkg *vec;
+</text>
+<argument name="receiveBody"/>
+<text>
+}
+
+static void
+send(char *p1, void *p2, size_t length) {
+odog_data_pkg *p;
+</text>
+<argument name="sendBody"/>
+<text><![CDATA[
+}
+
+static void
+sendAll(char *p1, void *p2, size_t length) {
+int n, i;
+char *qname;
+
+  n = numberOfConnections(p1);
+  for(i = 0;i < n;i++) {
+      qname = nameOfConnection(p1, i);
+      send(qname, p2, length);
+  }
+}
+
+static void
+sendDelayed(char *p1, void *p2, size_t length, double p3) {
+  odog_data_pkg *p;
+]]></text>
+<argument name="sendDelayedBody"/>
+<text><![CDATA[
+}
+
+static void
+sendAllDelayed(char *p1, void *p2, size_t length, double p3) {
+int n, i;
+char *qname;
+
+  n = numberOfConnections(p1);
+  for(i = 0;i < n;i++) {
+      qname = nameOfConnection(p1, i);
+      sendDelayed(qname, p2, length, p3);
+  }
+}
+
+static char
+canReceive(char *p1, int p2) {
+]]></text>
+<argument name="canReceiveBody"/>
+<text><![CDATA[
+    return 0;
+}
+
+static char
+canReceiveAll(char *p1, int p2) {
+int n, i;
+char *qname;
+
+    n = numberOfConnections(p1);
+    for(i = 0;i < n;i++) {
+        qname = nameOfConnection(p1, i);
+        if(canReceive(qname, p2) == 0) return 0;
+    }
+
+    return 1;
+}
+
+static char
+canSend(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canSendAll(char *p1, int p2) {
+    return 1;
+}
+
+extern void ]]></text>
+
+<argument name="containerName"/>
+<text>_scheduleMe(int, double);
+
+static void
+scheduleMe(double p1) {
+</text>
+<argument name="scheduleMeBody"/>
+<text>
+}
+</text>
+
+<argument name="attributes"/>
+<argument name="initModule"/>
+<argument name="computeModule"/>
+<argument name="finishModule"/>
+
+</fileGenerator>

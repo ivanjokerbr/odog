@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>DynamicDspFifo_insertData(</text><argument name="arg0"/><text>, </text><argument name="arg1"/><text>, p2);</text>
+
+</fileGenerator>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+<fileGenerator>
+<text>
+    if(</text><argument name="inputSignal"/><text>_status == PRESENT) {
+        odog_data_pkg *p;
+        </text><argument name="sendOutsideSignals"/><text>
+    }
+    </text><argument name="inputSignal"/><text>_status = UNKNOWN;
+</text>
+</fileGenerator>

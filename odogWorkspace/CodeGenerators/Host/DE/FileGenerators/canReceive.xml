@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>calendar_canReceive(</text><argument name="arg0"/><text>, currentTime, p2)</text>
+
+</fileGenerator>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT design (configuration, artifact*)>
+<!ATTLIST design name CDATA #REQUIRED>
+
+<!ELEMENT configuration (ruleConfig*)>
+<!ATTLIST configuration islibrary CDATA #REQUIRED>
+
+<!ELEMENT ruleConfig (ruleDescription*)>
+<!ATTLIST ruleConfig name CDATA #REQUIRED
+                     includeSyntaxRules CDATA #REQUIRED
+                     includeCGRules CDATA #REQUIRED>
+
+<!ELEMENT ruleDescription EMPTY>
+<!ATTLIST ruleDescription name CDATA #REQUIRED
+                          libraryURL CDATA #REQUIRED>
+
+<!ELEMENT artifact (summary?, ruleCheckingStatus?)>
+<!ATTLIST artifact name CDATA #REQUIRED
+                type CDATA #REQUIRED
+                url CDATA #REQUIRED
+                version CDATA #REQUIRED>
+
+<!ELEMENT summary (#PCDATA)>
+
+<!ELEMENT ruleCheckingStatus (report?)>
+<!ATTLIST ruleCheckingStatus checked CDATA #REQUIRED
+                             passed CDATA #REQUIRED
+                             versionChecked CDATA #REQUIRED
+                             ruleConfiguration CDATA #REQUIRED>
+
+<!ELEMENT report (#PCDATA)>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT atomicComponent (dport*, attribute*, version*)>
+<!ATTLIST atomicComponent name CDATA #REQUIRED>
+
+<!ELEMENT dport (attribute*, portType)>
+<!ATTLIST dport name CDATA #REQUIRED
+                isInput CDATA #REQUIRED
+                isOutput CDATA #REQUIRED>
+
+<!ELEMENT portType (attribute)>
+
+<!ELEMENT attribute (attrClassification, value?)>
+<!ATTLIST attribute name CDATA #REQUIRED>
+
+<!ELEMENT attrClassification EMPTY>
+<!ATTLIST attrClassification visible CDATA #REQUIRED
+                             hasData CDATA #REQUIRED
+                             static CDATA #REQUIRED>
+
+<!ELEMENT version (dport*, value*, attribute*, method*, reqserv*)>
+<!ATTLIST version name CDATA #REQUIRED>
+
+<!ELEMENT value (attrRef+)>
+<!ATTLIST value type CDATA #REQUIRED
+                valueExpr CDATA #REQUIRED>
+
+<!ELEMENT attrRef EMPTY>
+<!ATTLIST attrRef completeAttrName CDATA #REQUIRED>
+
+<!ELEMENT reqserv EMPTY>
+<!ATTLIST reqserv name CDATA #REQUIRED>
+                
+<!ELEMENT method (attribute*)>
+<!ATTLIST method name CDATA #REQUIRED 
+                 language CDATA #REQUIRED
+                 codeURL CDATA #REQUIRED>

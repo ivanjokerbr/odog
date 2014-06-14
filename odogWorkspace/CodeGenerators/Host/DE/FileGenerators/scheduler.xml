@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+#include <calendarQueue.h>
+#include <float.h>
+#include <stdlib.h>
+
+double startTime;
+double stopTime;
+double currentTime;
+int DE_zeroTimeEvents;
+calendarQueue_t *globalQueue;]]>
+
+#define NCOMPONENTS </text>
+
+<argument name="ncomponents"/>
+
+<text>
+</text>
+
+<argument name="inputQueues"/>
+
+<text><![CDATA[
+int DE_ordemTopologica[NCOMPONENTS] = {]]></text>
+
+<argument name="topologicalOrder"/>
+
+<text><![CDATA[};
+double selfSchedule[NCOMPONENTS] = {]]></text>
+
+<argument name="selfSchedule"/>
+
+<text>};
+</text>
+
+<argument name="componentsExecMethods"/>
+
+<text>
+void (*</text><argument name="topologyName"/><text><![CDATA[_fptr[NCOMPONENTS][3])(void);
+
+#define MAX_QUEUES ]]></text>
+
+<argument name="maxQueues"/>
+
+<text><![CDATA[
+calendarQueue_t *queues[NCOMPONENTS][MAX_QUEUES];
+
+#define init() ]]></text><argument name="topologyName"/><text><![CDATA[_user_init()
+#define finish() ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish()
+]]></text>
+
+<argument name="userInitMethod"/>
+
+<text>
+</text>
+
+<argument name="userFinishMethod"/>
+
+<text>
+void
+</text>
+<argument name="topologyName"/>
+
+<text><![CDATA[_scheduleMe(int componentId, double time) 
+{
+    selfSchedule[componentId] = time;
+}
+
+void
+abortSchedule(int componentId) {
+    selfSchedule[componentId] = -1;
+}
+
+void
+]]></text>
+
+<argument name="topologyName"/>
+
+<text><![CDATA[_init() {
+
+int i;
+
+    currentTime = 0.0;
+    DE_zeroTimeEvents = FALSE;
+    
+    globalQueue = calendar_newQueue(TRUE);
+]]></text>
+    
+<argument name="initializeQueues"/>
+<argument name="initializeFptr"/>
+<argument name="setQueues"/>
+
+<text><![CDATA[
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_init();
+    
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][0]();
+    }
+}
+
+void 
+]]></text>
+
+<argument name="topologyName"/>
+
+<text><![CDATA[_compute() {
+
+int i,j;
+double tmp = DBL_MAX, tmp2;
+int atorInicio = -1, component, k, hasdata;
+calist_t *entry;
+
+    if(startTime != -1) {
+        currentTime = startTime;
+    }
+    
+    for(i = 0;i < NCOMPONENTS;i++) {
+        if((selfSchedule[i] != -1) && 
+           (selfSchedule[i] < tmp) && 
+           (selfSchedule[i] >= currentTime)) {
+            atorInicio = i;
+            tmp = selfSchedule[i];
+        }
+        else 
+        if(selfSchedule[i] < currentTime) {
+            selfSchedule[i] = -1;
+        }
+    }
+
+    if(atorInicio == -1) {
+        return;
+    }
+    
+    currentTime = tmp;
+
+    while(currentTime < stopTime) {
+        do {
+            DE_zeroTimeEvents = FALSE;
+            for(j = 0;j < NCOMPONENTS;j++) {
+                if(DE_ordemTopologica[j] == atorInicio)
+                    break;
+            }
+            i = j;
+            for(j = 0;j < NCOMPONENTS;j++) {
+                component = DE_ordemTopologica[i];
+                hasdata = FALSE;
+                for(k = 0;k < MAX_QUEUES;k++) {
+                    if(queues[component][k] == NULL) break;
+                    if(calendar_canReceive(queues[component][k],  currentTime, 1)) {
+                        hasdata = TRUE;
+                        break;
+                    }
+                }
+
+                if(hasdata || selfSchedule[component] == currentTime) {
+                    ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[component][1]();
+
+                    for(k = 0;k < MAX_QUEUES;k++) {
+                        if(queues[component][k] == NULL) break;
+                        while(calendar_canReceive(queues[component][k],  currentTime, 1)) {
+                            calendar_getOneEvent(queues[component][k], currentTime);
+                        }
+                    }
+                }
+                
+                i++;
+                if(i == NCOMPONENTS) i = 0;
+            }
+        } while(DE_zeroTimeEvents);
+
+        tmp = DBL_MAX;
+        for(i = 0;i < NCOMPONENTS;i++) {
+            if((selfSchedule[i] != -1) &&
+               (selfSchedule[i] < tmp) && 
+               (selfSchedule[i] > currentTime)) {
+                atorInicio = i;
+                tmp = selfSchedule[i];
+            }
+            else 
+            if(selfSchedule[i] < currentTime) {
+                selfSchedule[i] = -1;
+            }
+        }
+
+        if((currentTime == DBL_MAX) && (calendar_size(globalQueue) == 0)) break;
+
+        tmp2 = calendar_peekNextTime(globalQueue, currentTime);
+        if(tmp2 != -1 && tmp2 < tmp) {
+            entry = (calist_t *) malloc(sizeof(calist_t));
+            calendar_remove(globalQueue, entry);
+            atorInicio = *((int *)entry->data);
+            currentTime = tmp2;
+            free(entry->data);
+            free(entry);
+        }
+        else {
+            currentTime = tmp;
+        }
+    }
+}
+
+void
+]]></text>
+
+<argument name="topologyName"/>
+
+<text><![CDATA[_finish() {
+int i;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][2]();
+    }
+
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish();
+    calendar_destroyQueue(globalQueue);
+]]></text>
+
+<argument name="destroyQueues"/>
+
+<text>
+}
+</text>
+
+</fileGenerator>

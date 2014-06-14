@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT services (service*)>
+
+<!ELEMENT service (method*)>
+<!ATTLIST service name CDATA #REQUIRED
+                  associatedAttribute CDATA #REQUIRED
+                  value CDATA #REQUIRED>
+
+<!ELEMENT method EMPTY>
+<!ATTLIST method interface CDATA #REQUIRED>

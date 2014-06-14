@@ -1,0 +1,3 @@
+VER_PORT(aver, dp) = EX.attribute.portType( dp -> portType && portType[name] = "portType" => ( EX.value.default( portType -> default ) || EX.value.v(aver -> v && v -> portType)) ) ;
+
+PT.atomicComponent.acomp( PT.atomicVersion.aver( acomp -> aver => PT.dport.dp ( ( acomp -> dp || aver -> dp) => [VER_PORT aver, dp]) ) )

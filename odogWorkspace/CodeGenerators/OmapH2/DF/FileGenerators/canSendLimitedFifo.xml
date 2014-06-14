@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>DynamicDspFifo_hasRoom(</text><argument name="arg0"/><text>, p2)</text>
+</fileGenerator>

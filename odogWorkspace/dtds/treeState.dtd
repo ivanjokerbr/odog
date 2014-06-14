@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT treeState (design*)>
+
+<!ELEMENT design EMPTY>
+<!ATTLIST design name CDATA #REQUIRED 
+                 URL CDATA #REQUIRED>
+

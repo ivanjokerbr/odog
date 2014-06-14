@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+#include "dynamicFifo.h"
+#include "dynamicDspFifo.h"
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#define READY 1
+#define DEFERABLE 3
+#define WRITE_BLOCKED 4
+#define BLOCKED 0
+
+#define INFINITE 1
+#define FINITE 2
+
+void classifyBoundary();
+void classifyComponent(int, short);
+int getComponent(short *, short);
+
+// #define DEBUG
+
+#define NUMBER_OF_PAGES ]]></text>
+<argument name="numberOfPages"/>
+<text>
+
+#define NCOMPONENTS </text>
+<argument name="ncomponents"/>
+<text>
+#define NBOUNDARY </text>
+<argument name="nboundary"/>
+<text>
+</text>
+<argument name="signals"/>
+<text>
+
+short componentsState[NCOMPONENTS];
+
+static int ninputs[NCOMPONENTS];
+static int *ninputConnections[NCOMPONENTS];
+static void ***inputFifo[NCOMPONENTS];
+static short **inputSampleRates[NCOMPONENTS];
+static char **typeInputFifo[NCOMPONENTS];
+static int ninputComponents[NCOMPONENTS];
+static int *inputComponents[NCOMPONENTS];
+
+static int noutputs[NCOMPONENTS];
+static int *noutputConnections[NCOMPONENTS];
+static void ***outputFifo[NCOMPONENTS];
+static short ***outputSampleRates[NCOMPONENTS];
+static char **typeOutputFifo[NCOMPONENTS];
+static int noutputComponents[NCOMPONENTS];
+static int *outputComponents[NCOMPONENTS];
+
+static char isBoundary[NCOMPONENTS];
+static int boundary[NCOMPONENTS];
+
+char *writeBlockedFifo[NBOUNDARY];
+int writeBlockedData[NBOUNDARY];
+
+static char (*canSend[NBOUNDARY])(char *, int);
+
+int dspfd;
+
+void
+initDynamicDspFifo(DynamicDspFifo *fifo, UNSIG16 step, UNSIG16 capacity) {
+
+    fifo->step = step;
+    fifo->capacity = capacity;
+    fifo->w_ptr = 0;
+    fifo->r_ptr = 0;
+}
+
+</text>
+<argument name="canSendMethods"/>
+<text>
+
+</text>
+<argument name="componentsExecMethods"/>
+<text>
+void (*</text><argument name="topologyName"/><text><![CDATA[_fptr[NCOMPONENTS][3])(void);
+
+#define init() ]]></text><argument name="topologyName"/><text><![CDATA[_user_init()
+#define finish() ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish()
+]]></text>
+<argument name="userInitMethod"/>
+<text>
+</text>
+<argument name="userFinishMethod"/>
+<text>
+void
+</text>
+
+<argument name="topologyName"/>
+<text><![CDATA[_init() {
+int i;
+void *sharedMem;
+char *devfn = "/dev/dsptask/dsptask0";
+
+#ifdef DEBUG
+    printf("Alocando memoria compartilhada\n");
+#endif
+
+    dspfd = open(devfn, O_RDWR);
+    if(dspfd < 0) {
+        fprintf(stderr, "cannot open %s\n", devfn);
+        return;
+    }
+
+    sharedMem = mmap(NULL, NUMBER_OF_PAGES * 0x1000, PROT_READ | PROT_WRITE, 
+        MAP_SHARED, dspfd, 0);
+    if(sharedMem < 0) {
+       printf("could not share memory.\n");
+       return;
+    }
+
+]]></text>
+<argument name="initDSPMem"/>
+<text><![CDATA[
+
+#ifdef DEBUG
+    printf("Memoria alocada. Inicializando..\n");
+#endif
+
+
+]]></text>
+<argument name="initSignals"/>
+<argument name="initializeFptr"/>
+
+<argument name="ninputs"/>
+<argument name="ninputConnections"/>
+<argument name="inputFifo"/>
+<argument name="typeInputFifo"/>
+<argument name="inputSampleRates"/>
+<argument name="ninputComponents"/>
+<argument name="inputComponents"/>
+
+<argument name="noutputs"/>
+<argument name="noutputConnections"/>
+<argument name="outputFifo"/>
+<argument name="typeOutputFifo"/>
+<argument name="outputSampleRates"/>
+<argument name="noutputComponents"/>
+<argument name="outputComponents"/>
+
+<argument name="isBoundary"/>
+<argument name="boundary"/>
+
+<argument name="initCanSend"/>
+
+<text><![CDATA[
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_init();
+    
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][0]();
+    }
+
+#ifdef DEBUG
+    printf("Inicializando memoria\n");
+#endif
+
+#ifdef DEBUG
+    printf("Rodando Init do DSP\n");
+#endif
+
+    // run the init method of the DSP
+    ioctl(dspfd,  0x8000);
+
+}
+]]>
+</text>
+
+<argument name="topologyName"/>
+<text><![CDATA[_compute() {
+    int i, id;
+
+#ifdef DEBUG
+    printf("Executando e disparando o DSP\n");
+#endif
+
+    // run the compute method of the DSP
+    ioctl(dspfd,  0x8001);
+
+#ifdef DEBUG
+    printf("Classificando todos os atores\n");
+#endif
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        classifyComponent(i, 0);
+    }
+
+    do {
+        id = getComponent(componentsState, READY);
+        if(id != -1) goto _EXECUTE;
+
+_CLASSBOUNDARY:
+        classifyBoundary();
+        id = getComponent(componentsState, READY);
+
+        if(id != -1) goto _EXECUTE;
+
+        id = getComponent(componentsState, DEFERABLE);
+        if(id == -1) {
+            goto _CLASSBOUNDARY;
+        }
+_EXECUTE:
+       ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[id][1](); 
+
+        classifyComponent(id, 1);
+    } while(1);
+}
+
+int
+getComponent(short *vec, short state) {
+int i;
+
+   for(i = 0;i < NCOMPONENTS;i++) {
+       if(vec[i] == state) return i;
+   }
+   return -1;
+}
+
+void
+classifyComponent(int id, short fired) {
+int i, j;
+char ready = 1, defer = 0;
+
+   if(componentsState[id] == WRITE_BLOCKED) {
+       if(canSend[boundary[id]](writeBlockedFifo[boundary[id]], 
+             writeBlockedData[boundary[id]]) == 0) {
+           return;
+       }
+       componentsState[id] = BLOCKED;
+   }
+
+   for(i = 0;i < ninputs[id];i++) {
+       for(j = 0;j < ninputConnections[id][i];j++) {
+           if(typeInputFifo[id][i][j] == INFINITE) {
+               if(contains_dynamic_fifo((dynamic_fifo *)inputFifo[id][i][j]) < *inputSampleRates[id][i]) {
+                   ready = 0;
+                   goto __state;
+               }
+           }
+           else {
+               if(DynamicDspFifo_hasData((DynamicDspFifo *)inputFifo[id][i][j], 
+                   *inputSampleRates[id][i]) == 0) {
+                   ready = 0;
+                   goto __state;
+               }
+           }
+       }
+   }
+
+   if(ready == 1) {   // check if the component became deferrable       
+       for(i = 0;i < noutputs[id];i++) {
+           for(j = 0;j < noutputConnections[id][i];j++) {
+               if(typeOutputFifo[id][i][j] == INFINITE) {
+                  if(*outputSampleRates[id][i][j] == 0) continue;
+                  if(contains_dynamic_fifo((dynamic_fifo *)outputFifo[id][i][j]) >= *outputSampleRates[id][i][j]) {
+                       defer = 1;
+                       goto __state;
+                  }
+               }
+            }
+       }
+   }
+
+__state:
+   componentsState[id] = ready | (defer << 1);
+
+   if(fired == 1) {
+       for(i = 0;i < ninputComponents[id];i++) {
+           if(isBoundary[id]) continue;
+           classifyComponent(inputComponents[id][i], 0);
+       }
+
+       for(i = 0;i < noutputComponents[id];i++) {
+          if(isBoundary[id]) continue;
+          classifyComponent(outputComponents[id][i], 0);
+       }
+   }
+}
+
+void
+classifyBoundary() {
+int i;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        if(isBoundary[i]) classifyComponent(i, 0);
+    }
+}
+
+void
+]]></text>
+
+<argument name="topologyName"/>
+
+<text><![CDATA[_finish() {
+int i, j;
+
+#ifdef DEBUG
+    printf("Encerrando\n");
+#endif
+
+    // run the finish method of the DSP
+    ioctl(dspfd,  0x8002);
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][2]();
+    }
+    
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish();
+]]></text>
+<argument name="destroySignals"/>
+<text><![CDATA[
+    for(i = 0;i < NCOMPONENTS;i++) { 
+        for(j = 0;j < ninputs[i];j++) {            
+            free(inputFifo[i][j]);
+        }
+        free(inputFifo[i]);
+        free(ninputConnections[i]);
+        free(inputComponents[i]);
+        free(inputSampleRates[i]);
+    }
+
+    for(i = 0;i < NCOMPONENTS;i++) { 
+        for(j = 0;j < noutputs[i];j++) {            
+            free(outputFifo[i][j]);
+            free(outputSampleRates[i][j]);
+        }
+        free(outputFifo[i]);
+        free(noutputConnections[i]);
+        free(outputComponents[i]);
+        free(outputSampleRates[i]);
+    }
+}
+]]></text>
+
+</fileGenerator>

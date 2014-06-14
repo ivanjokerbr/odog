@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>
+
+import java.io.*;
+import odog.test.TestComponentGraphModel;
+
+public class Test</text>
+
+<argument name="compName"/>
+
+<text>GraphModel {
+
+    public Test</text>
+
+<argument name = "compName"/>
+
+<text>GraphModel() {
+    }
+
+    public static void main(String [] args) {
+        TestComponentGraphModel test = new TestComponentGraphModel(</text>
+
+<argument name="isAtomic"/>
+
+<text>);
+        boolean result = test.test("</text>
+
+<argument name="compFile"/>
+
+<text>","</text>
+
+<argument name="goldenGraphFile"/>
+
+<text>");
+        if(!result) {
+            System.out.println("COMPONENT GRAPH MODEL TEST ERROR : Component </text>
+    
+<argument name="compFile"/>
+
+<text>");
+        }
+        else {
+            System.out.println("TEST PASS.");
+        }
+    }
+}
+</text>
+
+</fileGenerator>

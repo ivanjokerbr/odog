@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[#include <stdlib.h>
+#include <dynamicFifo.h>
+#include "copyData.h"
+
+]]></text>
+
+<argument name="instanceExecutionMethods"/>
+<argument name="signals"/>
+
+<text>
+
+static int
+numberOfConnections(char *port) {
+</text>
+
+<argument name="numberOfConnectionsBody"/>
+<text>} 
+
+static char *
+nameOfConnection(char *port, int number) {
+</text>
+<argument name="nameOfConnectionBody"/>
+<text>
+    return NULL;
+}
+
+static void
+setSampleRate(char *p1, short p2) {
+</text>
+<argument name="setSampleRateBody"/>
+<text>
+}
+
+static short
+getSampleRate(char *p1) {
+</text>
+<argument name="getSampleRateBody"/>
+<text>
+}
+
+static void
+stopExecution() {
+</text>
+<argument name="stopExecutionBody"/>
+<text>
+}
+
+static void
+receive(char *p1, void **p2, size_t *p3) {
+void **vec;
+</text>
+<argument name="receiveBody"/>
+<text>
+}
+
+static void
+send(char *p1, void *p2, size_t length) {
+  odog_data_pkg *p;
+</text>
+<argument name="sendBody"/>
+<text>
+}<![CDATA[
+
+static void
+sendAll(char *p1, void *p2, size_t length) {
+int n, i;
+char *qname;
+
+  n = numberOfConnections(p1);
+  for(i = 0;i < n;i++) {
+      qname = nameOfConnection(p1, i);
+      send(qname, p2, length);
+  }
+}
+
+static char
+canReceive(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canReceiveAll(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canSend(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canSendAll(char *p1, int p2) {
+    return 1;
+}
+]]></text>
+
+<argument name="attributes"/>
+
+<argument name="initModule"/>
+<argument name="computeModule"/>
+<argument name="finishModule"/>
+
+</fileGenerator>

@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+#include "mailbox.h"
+#include "tokliBIOS.h"
+#include "dynamicDspFifo.h"
+
+#define READY 1
+#define WRITE_BLOCKED 4
+#define BLOCKED 0
+
+void classifyBoundary();
+void classifyComponent(int, short);
+int getComponent(short *, short);
+
+#define NCOMPONENTS ]]></text>
+<argument name="ncomponents"/>
+<text>
+#define NBOUNDARY </text>
+<argument name="nboundary"/>
+<text>
+</text>
+<argument name="signals"/>
+<text>
+
+short componentsState[NCOMPONENTS];
+
+static int ninputs[NCOMPONENTS];
+static int ninputConnections[NCOMPONENTS][</text><argument name="maxInputPorts"/><text>];
+static DynamicDspFifo *inputFifo[NCOMPONENTS][</text><argument name="maxInputPorts"/><text>][</text><argument name="maxInputConnections"/><text>];
+static short *inputSampleRates[NCOMPONENTS][</text><argument name="maxInputPorts"/><text>];
+static int ninputComponents[NCOMPONENTS];
+static int inputComponents[NCOMPONENTS][</text><argument name="maxInputComponents"/><text>];
+
+static int noutputs[NCOMPONENTS];
+static int noutputConnections[NCOMPONENTS][</text><argument name="maxOutputPorts"/><text>];
+static DynamicDspFifo *outputFifo[NCOMPONENTS][</text><argument name="maxOutputPorts"/><text>][</text><argument name="maxOutputConnections"/><text>];
+static short *outputSampleRates[NCOMPONENTS][</text><argument name="maxOutputPorts"/><text>];
+static int noutputComponents[NCOMPONENTS];
+static int outputComponents[NCOMPONENTS][</text><argument name="maxOutputComponents"/><text>];
+
+static char isBoundary[NCOMPONENTS];
+static int boundary[NCOMPONENTS];
+
+char *writeBlockedFifo[NBOUNDARY];
+int writeBlockedData[NBOUNDARY];
+
+static char (*canSend[NBOUNDARY])(char *, int);
+
+// the shared memory region
+Uns *data;
+struct dsptask *currentTask;
+
+struct dsptask *
+getTask() { 
+    return currentTask;
+}
+
+</text>
+<argument name="canSendMethods"/>
+<text>
+
+</text>
+<argument name="componentsExecMethods"/>
+<text>
+void (*</text><argument name="topologyName"/><text><![CDATA[_fptr[NCOMPONENTS][3])(void);
+
+#define init() ]]></text><argument name="topologyName"/><text><![CDATA[_user_init()
+#define finish() ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish()
+]]></text>
+<argument name="userInitMethod"/>
+<text>
+</text>
+<argument name="userFinishMethod"/>
+<text>
+void
+</text>
+
+<argument name="topologyName"/>
+<text><![CDATA[_init() {
+int i;
+
+]]></text>
+<argument name="initDSPMem"/>
+
+<argument name="initSignals"/>
+<argument name="initializeFptr"/>
+
+<argument name="ninputs"/>
+<argument name="ninputConnections"/>
+<argument name="inputFifo"/>
+<argument name="inputSampleRates"/>
+<argument name="ninputComponents"/>
+<argument name="inputComponents"/>
+
+<argument name="noutputs"/>
+<argument name="noutputConnections"/>
+<argument name="outputFifo"/>
+<argument name="outputSampleRates"/>
+<argument name="noutputComponents"/>
+<argument name="outputComponents"/>
+
+<argument name="isBoundary"/>
+<argument name="boundary"/>
+
+<argument name="initCanSend"/>
+
+<text><![CDATA[
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_init();
+    
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][0]();
+    }
+
+}
+]]>
+</text>
+
+<argument name="topologyName"/>
+<text><![CDATA[_compute() {
+    int i, id;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        classifyComponent(i, 0);
+    }
+
+    do {
+        id = getComponent(componentsState, READY);
+
+        if(id == -1) {
+            classifyBoundary();
+            continue;
+        }
+
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[id][1]();
+        classifyComponent(id, 1);
+    } while(1);
+}
+
+int
+getComponent(short *vec, short state) {
+int i;
+
+   for(i = 0;i < NCOMPONENTS;i++) {
+       if(vec[i] == state) return i;
+   }
+   return -1;
+}
+
+void
+classifyComponent(int id, short fired) {
+int i, j;
+char ready = 1;
+
+   if(componentsState[id] == WRITE_BLOCKED) {
+       if(canSend[boundary[id]](writeBlockedFifo[boundary[id]], 
+             writeBlockedData[boundary[id]]) == 0) {
+           return;
+       }
+       componentsState[id] = BLOCKED;
+   }
+
+   for(i = 0;i < ninputs[id];i++) {
+       for(j = 0;j < ninputConnections[id][i];j++) {
+           if(DynamicDspFifo_hasData((DynamicDspFifo *)inputFifo[id][i][j], 
+               *inputSampleRates[id][i]) == 0) {
+               ready = 0;
+               goto __state;
+           }
+       }
+   }
+
+__state:
+   componentsState[id] = ready;
+
+   if(fired == 1) {
+       for(i = 0;i < ninputComponents[id];i++) {
+           if(isBoundary[id]) continue;
+           classifyComponent(inputComponents[id][i], 0);
+       }
+ 
+       for(i = 0;i < noutputComponents[id];i++) {
+          if(isBoundary[id]) continue;
+          classifyComponent(outputComponents[id][i], 0);
+       }
+   }
+}
+
+void
+classifyBoundary() {
+int i;
+
+    for(i = 0;i < NBOUNDARY;i++) {
+        classifyComponent(boundary[i], 0);
+    }
+}
+
+void
+]]></text>
+
+<argument name="topologyName"/>
+
+<text><![CDATA[_finish() {
+int i;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][2]();
+    }
+
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish();
+]]></text>
+<argument name="destroySignals"/>
+<text><![CDATA[
+}
+
+static Uns 
+t1_rcv_tctl(struct dsptask *task, Uns ctlcmd, Uns *ret, Uns arg)
+{
+    currentTask = task;
+
+    data = task->udata;
+	switch (ctlcmd) {
+        // init
+		case 0x8000: {
+            ]]></text><argument name="topologyName"/><text><![CDATA[_init(); 
+			return 0;
+        }
+
+        // compute
+        case 0x8001: {
+            ]]></text><argument name="topologyName"/><text><![CDATA[_compute();
+            return 0;
+        }
+
+        // finish
+        case 0x8002: {
+            ]]></text><argument name="topologyName"/><text><![CDATA[_finish();
+            return 0;
+        }
+
+		default:
+			return MBCMD_EID_BADTCTL;
+	}
+}
+
+
+#pragma DATA_SECTION(sharedMem, "sharedMemory");
+
+#define BUFSIZ ]]></text>
+<argument name="bufsiz"/>
+<text><![CDATA[
+static Uns sharedMem[BUFSIZ];
+
+static struct mmap_info mmap_info = {
+        sharedMem, /* start */
+        BUFSIZ  /* length */
+};
+
+#pragma DATA_SECTION(task_test1, "dspgw_task")
+struct dsptask task_test1 = {
+	TID_MAGIC,	/* tid */
+	"dsptask0",	/* name */
+	MBCMD_TTYP_WDDM | MBCMD_TTYP_WDMD |
+	MBCMD_TTYP_ASND | MBCMD_TTYP_PRCV,
+	NULL,	/* rcv_snd */
+	NULL,	/* rcv_req */
+	t1_rcv_tctl,	/* rcv_tctl */
+	NULL,		/* tsk_attrs */
+	&mmap_info,	/* mmap_info */
+	sharedMem	/* udata */
+};
+]]></text>
+
+</fileGenerator>

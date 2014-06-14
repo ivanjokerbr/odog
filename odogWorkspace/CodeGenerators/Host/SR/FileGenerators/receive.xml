@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>*p2 = </text><argument name="valueVar"/><text>->data;
+    *p3 = </text><argument name="valueVar"/><text>->length;
+    free(</text><argument name="valueVar"/><text>);</text>
+</fileGenerator>

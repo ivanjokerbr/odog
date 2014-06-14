@@ -1,0 +1,1 @@
+PT.connection.c( EX.dport.d( c ->* d && d[isOutput] = "true" && ( ~(EX.dport.d2( c ->* d2 && d2[isOutput] = "true" && d[name] != d2[name]) ))))

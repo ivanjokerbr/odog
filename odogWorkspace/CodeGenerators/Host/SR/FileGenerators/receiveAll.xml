@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>*((</text><argument name="dataType"/><text>*)p2[</text><argument name="index"/><text>]) = </text><argument name="valueVar"/><text>;</text>
+</fileGenerator>

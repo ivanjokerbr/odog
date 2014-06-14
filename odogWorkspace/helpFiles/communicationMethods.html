@@ -1,0 +1,220 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+  
+  
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+
+
+  
+  
+  
+  <title>Communication Methods</title>
+  <meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+  <style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	-->
+	</style>
+</head>
+
+
+<body style="background-color: rgb(192, 192, 192); color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee" vlink="#551a8b">
+
+
+
+<h1 style="text-align: center;">Communication Methods</h1>
+
+
+
+<br>
+
+
+
+<div style="text-align: justify;">Bellow is a description of the methods available for communication data in a component with methods implemented in C.<br>
+
+
+
+<br>
+
+
+
+
+	
+	
+	
+
+
+<font size="4"><i>void
+send(char *connection, void *data, size_t length)</i></font>
+<br>
+
+<br>
+
+
+
+<font size="4">&nbsp;&nbsp;&nbsp; Used
+to send data through one connection associated with an output port.
+The contents of the <i>data</i><span style="font-style: normal;">
+pointer, whose length is specified by the </span><i>length</i><span style="font-style: normal;">
+parameter, will be copied to all destination ports associated with
+</span><i>connection</i><span style="font-style: normal;">. The
+contents of </span><i>connection</i><span style="font-style: normal;">
+must be the name of a connection associated with an output port of
+this component. In order to facilitate the use of the data
+communication methods, two auxiliary methods are provided:</span></font>
+<br>
+
+<br>
+
+<br>
+
+
+<font size="4"><i>void
+sendDelayed(char *connection, void *data, size_t length, double
+instant)</i></font>
+<br>
+
+<br>
+
+
+<font size="4">&nbsp;&nbsp;&nbsp; Similar
+to the <i>send </i><span style="font-style: normal;">method. The
+</span><i>instant </i><span style="font-style: normal;">parameter
+</span>indicates a future moment in time where the data will be
+available to the destination. Therefore, in order to be different
+than the <i>send </i><span style="font-style: normal;">method, the
+component using the </span><i>sendDelayed</i><span style="font-style: normal;">
+method must be governed by an Interaction Semantics that has a notion of time
+evolution.</span></font>
+<br>
+
+<br>
+
+<br>
+
+
+
+<font size="4"><i>void sendAll(char
+*port, void *data, size_t length)</i></font>
+<p style="margin-bottom: 0in;"><font size="4"><i>void
+sendAllDelayed(char *port, void *data, size_t length, double instant)</i></font></p>
+
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4">&nbsp;&nbsp;&nbsp; Just as the
+<i>send</i> and <i>sendDelayed </i>methods respectively, but delivers
+the data to all connections associated with the output port <i>port</i>.
+</font>
+</p>
+
+
+<p style="margin-bottom: 0in;"><br>
+
+
+</p>
+
+
+<p style="margin-bottom: 0in;"><font size="4"><i>void receive(char
+*connection, void **data, size_t *length)</i></font></p>
+
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;">&nbsp;&nbsp;&nbsp; Receives
+data from the given connection associated with an input port. The
+</span><i>data</i><span style="font-style: normal;"> vector is
+allocated by the framework, so after processing, a </span><i>free(data)</i><span style="font-style: normal;">
+should be called.</span></font></p>
+
+
+
+	
+	
+	
+	<br>
+&nbsp;&nbsp;&nbsp; <font size="4">The <i>receive
+</i>method under the SR ISem has a variation when the data transmitted is an
+scalar value:</font>
+<p style="margin-bottom: 0in; font-style: normal;" align="justify"><font size="4"><i>&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; void
+receive(char *con, void *data, size_t *len): </i><span style="font-style: normal;">the data parameter is no longer a pointer to a vector of void. It is
+a pointer to the scalar type being communicated.</span></font>
+<p style="margin-bottom: 0in; font-style: normal;" align="justify"><br>
+
+</p>
+
+</p>
+
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><i>char
+canReceive(&ldquo;connection&rdquo;, int size)</i><br>
+
+</font><br>
+
+<font size="4">&nbsp;&nbsp;&nbsp; Returns a
+value equals to zero if <i>connection </i><span style="font-style: normal;">can
+supply </span><i>size </i><span style="font-style: normal;">data
+elements. The </span><i>connection </i><span style="font-style: normal;">should
+be associated with an input port. </span>Otherwise returns a value
+greater than zero.</font></p>
+
+
+<p style="margin-bottom: 0in;" align="justify"><br>
+
+
+</p>
+
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><i>char
+canReceiveAll(&ldquo;port&rdquo;, int size)</i><br>
+
+</font><br>
+
+<font size="4">&nbsp;&nbsp;&nbsp; Similar to
+the <i>canReceive</i><span style="font-style: normal;"> method, but
+checks all the connections associated with </span><i>port</i><span style="font-style: normal;">.
+</span></font>
+</p>
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><br>
+
+<i>char
+canSend(&ldquo;connection&rdquo;, int size)</i></font></p>
+
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4">&nbsp;&nbsp;&nbsp; Returns a
+value equals to zero if <i>size </i>data elements can be send through
+<i>connection</i>. Otherwise returns a value greater than zero.</font></p>
+
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><br>
+
+<i>char
+canSendAll(&ldquo;port&rdquo;, int size)</i><br>
+
+</font><br>
+
+<font size="4">&nbsp;&nbsp;&nbsp; Similar to
+the <i>canSend</i><span style="font-style: normal;"> method, but
+checks all the connections associated with </span><i>port</i><span style="font-style: normal;">.</span></font></p>
+
+
+
+
+
+</div>
+
+
+
+</body>
+</html>

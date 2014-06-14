@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!ELEMENT topology (compInstance*, attribute*, exportedPort*, connection*, version*)>
+<!ATTLIST topology name CDATA #REQUIRED>
+
+<!ELEMENT compInstance (value*)>
+<!ATTLIST compInstance instanceName CDATA #REQUIRED
+                        compName CDATA #REQUIRED
+                        libraryURL CDATA #REQUIRED>
+
+<!ELEMENT value (attrRef+)>
+<!ATTLIST value type CDATA #REQUIRED
+                valueExpr CDATA #REQUIRED>
+
+<!ELEMENT attrRef EMPTY>
+<!ATTLIST attrRef completeAttrName CDATA #REQUIRED>
+
+<!ELEMENT attribute (attrClassification, value?)>
+<!ATTLIST attribute name CDATA #REQUIRED>
+
+<!ELEMENT attrClassification EMPTY>
+<!ATTLIST attrClassification visible CDATA #REQUIRED
+                             hasData CDATA #REQUIRED
+                             static CDATA #REQUIRED>
+
+<!ELEMENT connection (attribute*, portRef+)>
+<!ATTLIST connection name CDATA #REQUIRED>
+
+<!ELEMENT portRef EMPTY>
+<!ATTLIST portRef completePortName CDATA #REQUIRED>
+
+<!ELEMENT exportedPort (portRef+)>
+<!ATTLIST exportedPort name CDATA #REQUIRED>
+
+<!ELEMENT version (compInstance*, attribute*, defVer*, value*, 
+    exportedPort*, connection*, method*, reqserv*)>
+<!ATTLIST version name CDATA #REQUIRED>
+
+<!ELEMENT defVer EMPTY>
+<!ATTLIST defVer name CDATA #REQUIRED 
+                 instanceName CDATA #REQUIRED
+                 versionName CDATA #REQUIRED>
+
+<!ELEMENT reqserv EMPTY>
+<!ATTLIST reqserv name CDATA #REQUIRED>
+                
+<!ELEMENT method (attribute*)>
+<!ATTLIST method name CDATA #REQUIRED 
+                 language CDATA #REQUIRED
+                 codeURL CDATA #REQUIRED>
+                 

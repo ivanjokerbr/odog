@@ -1,0 +1,5 @@
+VALUE_ATTR(v2,v1) = EX.attribute.at(v2 -> at && v1 -> at);
+
+EXPR1(v) = EX.value.v1(EX.value.v2(v->v1 && v->v2 && v2[name] != v1[name] && [VALUE_ATTR v2,v1]));
+
+~(EX.topologyVersion.ver( [EXPR1 ver] ) || EX.atomicVersion.ver( [EXPR1 ver] ) ||  EX.compInstance.ains( [EXPR1 ains] ))

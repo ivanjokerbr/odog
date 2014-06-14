@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+#include "timer.h"
+#include "dynamicFifoSafe.h"
+#include <stdlib.h>
+#include <pthread.h>
+
+#define NCOMPONENTS ]]></text>
+
+<argument name="ncomponents"/>
+<text>
+</text>
+
+<argument name="signals"/>
+<argument name="componentsExecMethods"/>
+
+<text>
+void (*</text><argument name="topologyName"/><text><![CDATA[_fptr[NCOMPONENTS][2])(void);
+
+static odog_timer ]]></text><argument name="topologyName"/><text><![CDATA[_timer;
+
+pthread_t ]]></text><argument name="topologyName"/><text>components[NCOMPONENTS];
+pthread_attr_t </text><argument name="topologyName"/><text>attr;
+int  </text><argument name="topologyName"/><text>thread_ids[NCOMPONENTS];
+
+pthread_mutex_t </text><argument name="topologyName"/><text>_stopMutex;
+pthread_cond_t </text><argument name="topologyName"/><text>_stopCond;
+
+pthread_mutex_t </text><argument name="topologyName"/><text>stateMutex;
+int </text><argument name="topologyName"/><text>numberOfWriteBlocked;
+int </text><argument name="topologyName"/><text>numberOfReadBlocked;
+pthread_mutex_t </text><argument name="topologyName"/><text>compMutexes[NCOMPONENTS];
+pthread_cond_t </text><argument name="topologyName"/><text>compConds[NCOMPONENTS];
+int </text><argument name="topologyName"/><text>writeBlocked[NCOMPONENTS];
+
+#define init() </text><argument name="topologyName"/><text><![CDATA[_user_init()
+#define finish() ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish()
+
+void
+]]></text><argument name="topologyName"/><text><![CDATA[_writeBlock(int comp) {
+int i;
+
+   ]]></text><argument name="topologyName"/><text><![CDATA[numberOfWriteBlocked++;
+   ]]></text><argument name="topologyName"/><text><![CDATA[writeBlocked[comp] = 1;
+
+   pthread_cond_wait(&]]></text><argument name="topologyName"/><text><![CDATA[compConds[comp], 
+       &]]></text><argument name="topologyName"/><text><![CDATA[stateMutex);
+}
+
+void
+]]></text><argument name="topologyName"/><text><![CDATA[_writeUnblock(int comp) {
+int i;
+
+   ]]></text><argument name="topologyName"/><text><![CDATA[writeBlocked[comp] = 0;
+   ]]></text><argument name="topologyName"/><text><![CDATA[numberOfWriteBlocked--;
+
+   pthread_cond_signal(&]]></text><argument name="topologyName"/><text><![CDATA[compConds[comp]);
+}
+
+void
+]]></text><argument name="topologyName"/><text><![CDATA[_wakeAllWriteBlocked() {
+int i = 0;
+
+   for(;i < NCOMPONENTS;i++) {
+       if(]]></text><argument name="topologyName"/><text><![CDATA[writeBlocked[i] == 0) continue;
+
+       pthread_cond_signal(&]]></text><argument name="topologyName"/><text><![CDATA[compConds[i]);
+       ]]></text><argument name="topologyName"/><text><![CDATA[writeBlocked[i] = 0;
+   }
+   ]]></text><argument name="topologyName"/><text><![CDATA[numberOfWriteBlocked = 0;
+}
+]]></text>
+
+<argument name="userInitMethod"/>
+
+<text>
+</text>
+<argument name="userFinishMethod"/>
+<text>
+void
+</text>
+<argument name="topologyName"/>
+<text><![CDATA[_init() {
+int i;
+
+    
+    odog_timer_start(&]]></text><argument name="topologyName"/><text><![CDATA[_timer);
+
+    ]]></text><argument name="topologyName"/><text><![CDATA[numberOfWriteBlocked = 0;
+    ]]></text><argument name="topologyName"/><text><![CDATA[numberOfReadBlocked = 0;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        pthread_mutex_init(&]]></text><argument name="topologyName"/><text><![CDATA[compMutexes[i], NULL);
+        pthread_cond_init(&]]></text><argument name="topologyName"/><text><![CDATA[compConds[i], NULL);
+        ]]></text><argument name="topologyName"/><text><![CDATA[writeBlocked[i] = 0;
+    }
+
+    pthread_mutex_init(&]]></text><argument name="topologyName"/><text><![CDATA[stateMutex, NULL);
+
+]]></text>
+<argument name="initSignals"/>
+<argument name="initializeFptr"/>
+<text><![CDATA[
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_init();
+    
+    pthread_mutex_init(&]]></text><argument name="topologyName"/><text><![CDATA[_stopMutex, NULL);
+    pthread_cond_init(&]]></text><argument name="topologyName"/><text><![CDATA[_stopCond, NULL);
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][0]();
+    }
+}
+
+void
+]]></text>
+<argument name="topologyName"/>
+<text><![CDATA[_compute() {
+int i;
+
+    pthread_attr_init(&]]></text><argument name="topologyName"/><text><![CDATA[attr);
+    pthread_attr_setdetachstate(&]]></text><argument name="topologyName"/><text><![CDATA[attr, PTHREAD_CREATE_JOINABLE);
+
+    ]]></text>
+<argument name="createThreads"/><text><![CDATA[
+
+    pthread_mutex_lock(&]]></text><argument name="topologyName"/><text><![CDATA[_stopMutex);
+    pthread_cond_wait(&]]></text><argument name="topologyName"/><text><![CDATA[_stopCond,
+        &]]></text><argument name="topologyName"/><text><![CDATA[_stopMutex);
+    pthread_mutex_unlock(&]]></text><argument name="topologyName"/><text><![CDATA[_stopMutex);
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        pthread_cancel(]]></text><argument name="topologyName"/><text><![CDATA[components[i]);
+    }
+}
+
+void
+]]></text>
+<argument name="topologyName"/>
+<text><![CDATA[_finish() {
+int i, j;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][1]();
+    }
+    
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish();
+
+    ]]></text>
+<argument name="destroySignals"/><text><![CDATA[
+
+    pthread_mutex_destroy(&]]></text><argument name="topologyName"/><text><![CDATA[_stopMutex);
+    pthread_cond_destroy(&]]></text><argument name="topologyName"/><text><![CDATA[_stopCond);
+
+   pthread_mutex_destroy(&]]></text><argument name="topologyName"/><text><![CDATA[stateMutex);
+   for(i = 0;i < NCOMPONENTS;i++) {
+       pthread_mutex_destroy(&]]></text><argument name="topologyName"/><text><![CDATA[compMutexes[i]);
+       pthread_cond_destroy(&]]></text><argument name="topologyName"/><text><![CDATA[compConds[i]);
+   }
+
+    odog_timer_stop(&]]></text><argument name="topologyName"/><text><![CDATA[_timer);
+    double t = odog_timer_time(&]]></text><argument name="topologyName"/><text><![CDATA[_timer);
+    printf("Total exec time = %f\n", t);
+}
+]]></text>
+
+
+</fileGenerator>

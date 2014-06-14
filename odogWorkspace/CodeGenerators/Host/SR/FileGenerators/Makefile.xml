@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>
+INCLUDE_DIRS = </text>
+
+<argument name="includeDirs"/>
+
+<text>
+LIB_DIRS = </text>
+
+<argument name="libraryDirs"/>
+
+<text>
+
+CC = gcc 
+CFLAGS = ${INCLUDE_DIRS} -g
+
+OBJ = main.o </text>
+
+<argument name="objects"/>
+
+<text>
+
+main: $(OBJ)
+	$(CC) -g -o main $(OBJ) ${LIB_DIRS} -lcalendar </text>
+
+<argument name="libraries"/>
+
+<text>
+clean:
+	rm -f main *.o 
+</text>
+
+</fileGenerator>

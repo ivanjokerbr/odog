@@ -1,0 +1,307 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+
+
+
+
+  
+  
+  
+  
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+
+
+
+
+
+  
+  
+  
+  
+  
+  <title>Services</title>
+</head>
+
+
+<body style="background-color: rgb(192, 192, 192); color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee" vlink="#551a8b">
+<br>
+
+
+
+
+
+<h1 style="text-align: center;">Services</h1>
+
+
+
+
+
+<div style="text-align: left;"><br>
+
+
+
+
+
+The following services are available for:<br>
+
+
+
+
+
+<br>
+
+
+
+
+
+<span style="font-weight: bold;">All components</span><br>
+
+
+
+
+
+<br>
+
+
+
+
+
+
+
+
+	
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+<title></title>
+<meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+<meta name="CREATED" content="0;0">
+<meta name="CHANGED" content="0;0">
+
+	
+	
+	
+	
+	
+<style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	-->
+	</style>
+
+<font size="4"><i><br>
+int
+numberOfConnections(char *port)</i></font><br>
+
+<span style="font-style: italic;"><br>
+
+
+
+
+
+&nbsp;&nbsp;&nbsp; </span>Returns the number of connections associated with <span style="font-style: italic;">port</span>.<br>
+
+
+
+
+
+<br>
+
+
+
+
+	
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+<title></title>
+<meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+
+	
+	
+	
+<style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	-->
+	</style>
+
+<font size="4"><i><br>
+char
+*nameOfConnection(char *port, int number)</i></font><br>
+
+<br>
+&nbsp;&nbsp;&nbsp; Returns the name of the connection of port <span style="font-style: italic;">port</span> whose number is specified by the parameter <span style="font-style: italic;">number</span>.<br>
+<br>
+
+<title></title>
+<meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+
+	
+	
+	
+<style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	--</style><font size="4"><i></i></font><br>
+
+
+<br>
+
+
+
+
+
+<span style="font-weight: bold;">ISEM</span> associated with value <span style="font-weight: bold;">DE</span></div>
+
+
+
+
+
+<br>
+
+
+
+
+<span style="font-style: italic;"></span>
+
+
+	
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+<title></title>
+<meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+
+	
+	
+	
+<style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	-->
+	</style>
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4">	<i>void scheculeMe(double
+instant)</i>&nbsp;</font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4">&nbsp;&nbsp;&nbsp; Requests the execution of the atomic component at
+<i>instant</i><span style="font-style: normal;">. If multiple calls to
+this service are made prior to reaching the least value of instant
+specified by them, only the last one will be efective.</span></font></p>
+
+<p style="margin-bottom: 0in;" align="justify"><br>
+
+</p>
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4">	<i>void abortSchedule(void)&nbsp;</i></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4">&nbsp;&nbsp;&nbsp; Invalidates the previous call to the <i>scheduleMe()</i><span style="font-style: normal;">.</span></font></p>
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><br>
+	<i>double currentTime(void)</i><span style="font-style: normal;">&nbsp;</span></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;">&nbsp;&nbsp;&nbsp; Returns the current value of time.</span></font></p>
+
+<br>
+<br>
+<br>
+<span style="font-weight: bold;">ISEM</span> associated with value <span style="font-weight: bold;">SR</span><br>
+<br>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+<title></title>
+<meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+
+	
+	
+	
+<style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	--></style><font size="4"><i>void
+setAbsent(char *con) </i><span style="font-style: normal;"><br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; Sets the
+state of the connection specified by </span><i>con</i><span style="font-style: normal;">
+as being known and absent in the particular instant.</span></font>
+<p style="margin-bottom: 0in; font-style: normal;" align="justify"><br>
+
+</p>
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><i>void
+setAbsentAll(char *port)</i><span style="font-style: normal;">&nbsp;</span></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;">&nbsp;&nbsp;&nbsp; Sets
+the state of all connections associated with the input port </span><i>port</i><span style="font-style: normal;">
+as being known and absent in the particular instant.</span></font></p>
+
+<p style="margin-bottom: 0in;" align="justify"><br>
+
+</p>
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><i>char
+isAbsent(char *con)&nbsp;</i><span style="font-style: normal;"></span></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;">&nbsp;&nbsp;&nbsp; Returns 0
+if the state of connection </span><i>con</i><span style="font-style: normal;">
+is known and absent. Otherwise returns 1.</span></font></p>
+
+<p style="margin-bottom: 0in; font-style: normal;" align="justify"><br>
+
+</p>
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><i>char
+isAbsentAll(char *port)</i><span style="font-style: normal;"><span style="text-decoration: none;">&nbsp;</span></span></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;"><span style="text-decoration: none;">&nbsp;&nbsp;&nbsp; Returns 0 if the state of all connections associated with input
+port </span></span><i><span style="text-decoration: none;">port</span></i><span style="font-style: normal;"><span style="text-decoration: none;">
+is known and absent. Otherwise returns 1.</span></span></font></p>
+
+
+<p style="margin-bottom: 0in;" align="justify"><font size="4">The
+<i>canReceive</i><span style="font-style: normal;"> and </span><i>canReceiveAll</i><span style="font-style: normal;">
+methods will return 1 only when the state of an input connection is
+different than </span><i>unknown</i><span style="font-style: normal;">.
+The </span><i>canSend </i><span style="font-style: normal;">and
+</span><i>canSendAll </i><span style="font-style: normal;">methods
+will return 1 only when the state of an output connection is </span><i>unknown</i><span style="font-style: normal;">.</span></font></p>
+
+<br>
+<br>
+<span style="font-weight: bold;">ISEM</span> associated with value <span style="font-weight: bold;">DF</span><br>
+<meta http-equiv="CONTENT-TYPE" content="text/html; charset=utf-8">
+<title></title>
+<meta name="GENERATOR" content="OpenOffice.org 2.3  (Unix)">
+
+	
+	
+	
+<style type="text/css">
+	<!--
+		@page { size: 8.5in 11in; margin: 0.79in }
+		P { margin-bottom: 0.08in }
+	--></style><font size="4"><span style="font-style: normal;">void
+</span><i>setSampleRate(char *port, short value)</i><span style="font-style: normal;"><br>
+<br>
+&nbsp;&nbsp;&nbsp; Sets the sample rate of </span><i>port</i><span style="font-style: normal;">.</span></font>
+
+<p style="margin-bottom: 0in;" align="justify"><br>
+<font size="4">int
+<i>getSampleRate(char *port)</i><span style="font-style: normal;"></span></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;">&nbsp;&nbsp;&nbsp; Returns the sample rate of </span><i>port.</i></font></p>
+
+
+<p style="margin-bottom: 0in;" align="justify"><br>
+<font size="4"><i>void
+stopExecution(void)</i><span style="font-style: normal;">&nbsp;</span></font></p>
+<p style="margin-bottom: 0in;" align="justify"><font size="4"><span style="font-style: normal;">&nbsp;&nbsp;&nbsp; Asks for
+immediate termination of the execution. The finish methods of all
+components will be called before exiting.</span></font></p>
+
+<br>
+<font size="4"><i></i></font><br>
+<br>
+
+
+
+
+
+<span style="font-style: italic;"></span>
+</body>
+</html>

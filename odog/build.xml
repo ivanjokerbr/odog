@@ -1,0 +1,38 @@
+<project name="odog-v1.0" basedir="." default="main">
+
+	<property name="lib.dir"     value="lib"/>
+    <property name="src.dir"     value="src"/>
+    <property name="build.dir"   value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="jar.dir"     value="."/>
+
+    <property name="main-class"  value="odog.editor.OdogEditor"/>
+
+    <path id="classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete file="odog-v1.0.jar"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath"/>
+        <copy file="${src.dir}/odog/logo300.jpg" tofile="${classes.dir}/odog/logo300.jpg"/>
+        <copy todir="${classes.dir}/odog/icons">
+           <fileset dir="${src.dir}/odog/icons"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="${main-class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE design PUBLIC "-//ODOGDESIGN//DTD//EN" ""><design name="cgRules">
+<configuration islibrary="true">
+</configuration>
+<artifact name="toplevelAttr" type="rule" url="file:toplevelAttr.rule" version="1199358132853">
+  <summary><![CDATA[One topology must be tagged as "Toplevel"]]></summary>
+</artifact>
+<artifact name="onlyOneToplevel" type="rule" url="file:onlyOneToplevel.rule" version="1199358405741">
+  <summary><![CDATA[Only one topology can be tagged as "Toplevel"]]></summary>
+</artifact>
+<artifact name="ISpossibleValues" type="rule" url="file:ISpossibleValues.rule" version="1199358723151">
+  <summary><![CDATA[Invalid value for Interaction Semantics (IS) attribute]]></summary>
+</artifact>
+<artifact name="noexpportfortoplevel" type="rule" url="file:noexpportfortoplevel.rule" version="1199358974739">
+</artifact>
+<artifact name="everyAtomicVersionWithMethod" type="rule" url="file:everyAtomicVersionWithMethod.rule" version="1199375680251">
+</artifact>
+</design>

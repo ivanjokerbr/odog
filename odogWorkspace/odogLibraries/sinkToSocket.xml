@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE atomicComponent PUBLIC "-//ODOGSYNTAXATOMIC//DTD//EN" ""><atomicComponent name="sinkToSocket">
+  <dport name="input" isInput="true" isOutput="false">
+  <portType>
+    <attribute name="portType">
+      <attrClassification visible="true" hasData="true" static="true"/>
+      <value type="string" valueExpr="double">
+        <attrRef completeAttrName="plotter.input.portType"/>
+      </value>
+    </attribute>
+  </portType>
+  </dport>
+  <attribute name="cmd">
+    <attrClassification visible="true" hasData="true" static="true"/>
+  </attribute>
+  <attribute name="socketPort">
+    <attrClassification visible="true" hasData="true" static="true"/>
+  </attribute>
+  <version name="v1">
+    <method name="init" language="C" codeURL="sinkToSocket.c">
+    </method>
+    <method name="compute" language="C" codeURL="sinkToSocket.c">
+    </method>
+    <method name="finish" language="C" codeURL="sinkToSocket.c">
+    </method>
+  </version>
+</atomicComponent>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text><![CDATA[
+<HTML>
+<HEAD>
+<TITLE>Component ]]></text>
+
+<argument name="compName"/>
+
+<text><![CDATA[</TITLE>
+</HEAD>
+<body style="background-color: rgb(192, 192, 192); color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee" vlink="#551a8b">
+<body>
+
+<h1 align="center">Component ]]></text>
+
+<argument name="compName"/>
+
+<text><![CDATA[</h1>
+
+Input Ports:<br>
+<pre>]]></text>
+
+<argument name="inputPortList"/>
+
+<text><![CDATA[
+</pre>
+
+Output Ports:<br>
+<pre>]]></text>
+
+<argument name="outputPortList"/>
+
+<text><![CDATA[
+</pre>
+
+Attributes:<br>
+<pre>]]></text>
+
+<argument name="attributeList"/>
+
+<text><![CDATA[</pre>
+
+Requires: ]]></text>
+
+<argument name="serviceList"/>
+
+<text><![CDATA[<br><br>]]>
+</text>
+
+<argument name="initMethodLink"/>
+
+<argument name="computeMethodLink"/>
+
+<argument name="fixpointMethodLink"/>
+
+<argument name="finishMethodLink"/>
+
+<text><![CDATA[
+</body>
+</HTML>
+]]></text>
+
+</fileGenerator>

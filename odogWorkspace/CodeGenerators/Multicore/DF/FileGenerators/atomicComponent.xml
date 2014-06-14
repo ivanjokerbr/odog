@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[#include <stdlib.h>
+#include <dynamicFifoSafe.h>
+#include <pthread.h>
+#include "copyData.h"
+
+extern pthread_mutex_t ]]></text><argument name="containerName"/><text><![CDATA[stateMutex;
+extern int ]]></text><argument name="containerName"/><text><![CDATA[numberOfReadBlocked;
+extern int ]]></text><argument name="containerName"/><text><![CDATA[numberOfWriteBlocked;
+extern void ]]></text><argument name="containerName"/><text><![CDATA[_wakeAllWriteBlocked();
+extern void ]]></text><argument name="containerName"/><text><![CDATA[_writeBlock();
+extern void ]]></text><argument name="containerName"/><text><![CDATA[_writeUnblock();
+extern int ]]></text><argument name="containerName"/><text><![CDATA[writeBlocked[]]></text><argument name="numberOfComponents"/><text><![CDATA[];
+
+]]></text>
+
+<argument name="instanceExecutionMethods"/>
+<argument name="signals"/>
+
+<text>
+static int
+numberOfConnections(char *port) {
+</text>
+
+<argument name="numberOfConnectionsBody"/>
+<text>} 
+
+static char *
+nameOfConnection(char *port, int number) {
+</text>
+<argument name="nameOfConnectionBody"/>
+<text>
+    return NULL;
+}
+
+static short
+getSampleRate_con(char *p1) {
+</text>
+<argument name="getSampleRateBody"/>
+<text>
+    return 0;
+}
+
+static void 
+setSampleRate_con(char *p1, short p2) {
+</text>
+<argument name="setSampleRateBody"/>
+<text><![CDATA[
+}
+
+static void
+setSampleRate(char *p1, short p2) {
+int i;
+
+    int size = numberOfConnections(p1);
+    for(i = 0;i < size;i++) {
+       char *con = nameOfConnection(p1, i);
+       setSampleRate_con(con, p2);
+    }
+}
+
+static short
+getSampleRate(char *p1) {
+    return getSampleRate_con(nameOfConnection(p1, 0));
+}
+
+static void
+stopExecution() {
+]]></text>
+<argument name="stopExecutionBody"/>
+<text><![CDATA[
+}
+
+static void
+receive(char *p1, void **p2, size_t *p3) {
+void **vec;
+char fromc = -1;
+
+]]></text>
+<argument name="receiveBody"/>
+<text><![CDATA[
+
+   if(fromc != -1) {
+       pthread_mutex_lock(&]]></text><argument name="containerName"/><text><![CDATA[stateMutex);
+       if(]]></text><argument name="containerName"/><text><![CDATA[writeBlocked[fromc] == 1) {
+           ]]></text><argument name="containerName"/><text><![CDATA[_writeUnblock(fromc);
+       }
+       pthread_mutex_unlock(&]]></text><argument name="containerName"/><text><![CDATA[stateMutex);
+   }
+}
+
+static void
+send(char *p1, void *p2, size_t length) {
+  odog_data_pkg *p;
+]]></text>
+<argument name="sendBody"/>
+<text>
+}<![CDATA[
+
+static void
+sendAll(char *p1, void *p2, size_t length) {
+int n, i;
+char *qname;
+
+  n = numberOfConnections(p1);
+  for(i = 0;i < n;i++) {
+      qname = nameOfConnection(p1, i);
+      send(qname, p2, length);
+  }
+}
+
+static char
+canReceive(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canReceiveAll(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canSend(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canSendAll(char *p1, int p2) {
+    return 1;
+}
+]]></text>
+
+<argument name="attributes"/>
+
+<argument name="initModule"/>
+<argument name="computeModule"/>
+<argument name="finishModule"/>
+
+<text><![CDATA[
+void *
+compute_wraper(void *idp) {
+
+        while(1) {
+        ]]></text>
+<argument name="inputTest"/><text>
+
+_yieldTest:
+        pthread_testcancel();
+        </text>
+<argument name="yieldTest"/><text><![CDATA[
+
+            pthread_mutex_lock(&]]></text><argument name="containerName"/><text><![CDATA[stateMutex);        
+            if(]]></text><argument name="containerName"/><text><![CDATA[numberOfWriteBlocked + ]]></text><argument name="containerName"/><text><![CDATA[numberOfReadBlocked + 1 == ]]></text><argument name="numberOfComponents"/><text><![CDATA[) {
+                ]]></text><argument name="containerName"/><text><![CDATA[_wakeAllWriteBlocked();
+            }
+            else {
+                ]]></text><argument name="containerName"/><text><![CDATA[_writeBlock(]]></text><argument name="componentId"/><text><![CDATA[);
+            }
+            pthread_mutex_unlock(&]]></text><argument name="containerName"/><text><![CDATA[stateMutex);
+
+        goto _yieldTest;
+
+_execute:
+        compute();
+        pthread_testcancel();
+    }
+}]]></text>
+
+</fileGenerator>

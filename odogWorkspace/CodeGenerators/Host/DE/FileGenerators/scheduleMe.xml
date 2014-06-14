@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<argument name="name"/><text>_scheduleMe(</text><argument name="componentID"/><text>,</text><argument name="arg0"/><text>);</text>
+
+</fileGenerator>

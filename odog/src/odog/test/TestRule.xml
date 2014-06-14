@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<text>
+
+import java.io.*;
+import odog.test.TestRule;
+
+public class Test</text>
+
+<argument name="compName"/>
+
+<text>_</text>
+
+<argument name="ruleName"/>
+
+<text> {
+
+    public Test</text>
+
+<argument name = "compName"/>
+
+<text>_</text>
+
+<argument name="ruleName"/>
+
+<text>() {
+    }
+
+    public static void main(String [] args) {
+        TestRule test = new TestRule(</text>
+
+<argument name="isAtomic"/>
+
+<text>);
+        boolean result = test.test("</text>
+
+<argument name="compFile"/>
+
+<text>","</text>
+
+<argument name="ruleFile"/>
+
+<text>","</text>
+
+<argument name="ruleName"/>
+
+<text>","</text>
+
+<argument name="goldenSyntaxFile"/>
+
+<text>");
+        if(!result) {
+            System.out.println("RULE TEST ERROR : Component </text>
+    
+<argument name="compFile"/>
+
+<text> Rule </text>
+
+<argument name="ruleFile"/>
+
+<text>");
+        }
+        else {
+            System.out.println("TEST PASS.");
+        }
+    }
+}
+</text>
+
+</fileGenerator>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+<argument name="inputName"/>
+<text>_value = </text><argument name="dataType"/><text>p2);
+</text>
+<argument name="inputName"/>
+<text>_status = PRESENT;
+</text>
+</fileGenerator>

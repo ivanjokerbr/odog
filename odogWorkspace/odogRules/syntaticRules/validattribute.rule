@@ -1,0 +1,1 @@
+~( EX.attributeClass.atclass( (atclass[visible] = "true" && atclass[hasData] = "false") || (atclass[visible] = "false" && atclass[static] = "false")  ))

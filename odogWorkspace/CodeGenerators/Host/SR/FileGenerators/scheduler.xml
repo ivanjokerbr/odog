@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+#include <stdlib.h>
+#include "sr.h"
+#include "copyData.h"
+]]></text>
+
+<argument name="extraIncludes"/>
+<text><![CDATA[
+
+int ]]></text><argument name="topologyName"/><text>_nIterations;
+int </text><argument name="topologyName"/><text><![CDATA[_zeroTimeEvents;
+
+static int currentInstant;
+
+#define NCOMPONENTS ]]></text>
+
+<argument name="ncomponents"/>
+<text>
+</text>
+
+<argument name="signals"/>
+
+<text><![CDATA[
+static int ordemTopologica[NCOMPONENTS] = {]]></text>
+
+<argument name="topologicalOrder"/>
+
+<text><![CDATA[};
+
+static char strict[NCOMPONENTS] = {]]></text>
+
+<argument name="strictComponents"/>
+
+<text>};
+</text>
+
+<argument name="componentsExecMethods"/>
+
+<text><![CDATA[
+void (*]]></text><argument name="topologyName"/><text><![CDATA[_fptr[NCOMPONENTS][4])(void);
+
+#define MAX_INPUTS ]]></text>
+
+<argument name="maxInputs"/>
+
+<text><![CDATA[
+char *]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[NCOMPONENTS][MAX_INPUTS];
+
+static void 
+resetSignalStatus() {
+int i, j;
+
+   for(i = 0;i < NCOMPONENTS;i++) {
+       for(j = 0;j < MAX_INPUTS;j++) {
+           if(]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[i][j] != NULL) {
+              *]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[i][j] = UNKNOWN;
+           }
+       }   
+   }
+}
+
+#define init() ]]></text><argument name="topologyName"/><text><![CDATA[_user_init()
+#define finish() ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish()
+
+]]></text>
+
+<argument name="userInitMethod"/>
+<argument name="userFinishMethod"/>
+
+<text>
+void
+</text>
+<argument name="topologyName"/>
+<text><![CDATA[_init() {
+    int i;
+
+    ]]></text><argument name="topologyName"/><text><![CDATA[_zeroTimeEvents = 0;
+    currentInstant = 0;
+]]></text>
+    
+<argument name="initializeFptr"/>
+<argument name="setSignalsStatus"/>
+
+<text><![CDATA[
+    resetSignalStatus();
+
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_init();
+    
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][0]();
+    }
+}
+
+void 
+]]></text>
+
+<!-- METHODO COMPUTE DA TOPOLOGIA -->
+<argument name="topologyName"/>
+<text><![CDATA[_compute() {
+
+int iteration = 0, i, j, notReady;
+]]></text>
+
+<argument name="fromOutsideData"/>
+
+<text><![CDATA[
+    do {
+        do {
+            ]]></text><argument name="topologyName"/><text><![CDATA[_zeroTimeEvents = 0;
+            for(i = 0;i < NCOMPONENTS;i++) {
+                int comp = ordemTopologica[i];
+                if(strict[comp]) {
+                    notReady = 0;
+                    for(j = 0;j < MAX_INPUTS && ]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[comp][j] != NULL;j++) {
+                         if(*]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[comp][j] == UNKNOWN) {
+                             notReady = 1;
+                             break;
+                         }
+                    }
+                    if(notReady == 0) {
+                        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[comp][1]();
+                    }
+                }
+                else {
+                    ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[comp][1]();
+                }
+            }
+            if(]]></text><argument name="topologyName"/><text><![CDATA[_zeroTimeEvents == 0) break;
+
+            notReady = 0;
+            for(i = 0;i < NCOMPONENTS;i++) {
+                for(j = 0;j < MAX_INPUTS && ]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[i][j] != NULL;j++) {
+                    if(*]]></text><argument name="topologyName"/><text><![CDATA[_signalsStatus[i][j] == UNKNOWN) {
+                        notReady = 1;
+                    }
+                }
+            }
+            if(notReady == 0) {
+                ]]></text><argument name="testOutputBoundarySignals"/><text><![CDATA[
+            }
+_outsideTest:
+            if(notReady == 0) break;
+
+        } while(1);
+
+        for(i = 0;i < NCOMPONENTS;i++) {
+           ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][3]();
+        }
+
+        resetSignalStatus();
+
+        iteration++;
+    } while(iteration < ]]></text><argument name="topologyName"/><text><![CDATA[_nIterations);
+]]></text>
+
+<argument name="toOutsideData"/>
+
+<text>
+}
+void
+</text>
+
+<!-- METHODO FINISH DA TOPOLOGIA -->
+<argument name="topologyName"/>
+<text><![CDATA[_finish() {
+int i;
+
+    for(i = 0;i < NCOMPONENTS;i++) {
+        ]]></text><argument name="topologyName"/><text><![CDATA[_fptr[i][2]();
+    }    
+    ]]></text><argument name="topologyName"/><text><![CDATA[_user_finish();    
+}
+]]></text>
+
+</fileGenerator>

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+java -classpath "${ODOG_BASE_PATH}/dist/lib/java-cup-11a.jar:${ODOG_BASE_PATH}/dist/lib/jung-1.7.6.jar:${ODOG_BASE_PATH}/dist/lib/matra-0.8.2b.jar:${ODOG_BASE_PATH}/dist/lib/swing-layout-1.0.3.jar:${ODOG_BASE_PATH}/dist/lib/colt.jar:${ODOG_BASE_PATH}/dist/lib/concurrent.jar:${ODOG_BASE_PATH}/dist/lib/commons-collections-3.2.jar:${ODOG_BASE_PATH}/build/classes/" odog.editor.OdogEditor
+
+

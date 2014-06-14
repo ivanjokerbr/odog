@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text>
+include </text><argument name="designLocation"/><text>AppMakefile
+
+INCLUDE_DIRS = </text><argument name="includeDirs"/><text>
+LIB_DIRS = </text><argument name="libraryDirs"/><text>
+
+CC = gcc 
+CFLAGS = ${INCLUDE_DIRS} ${EXTRA_INCLUDE_DIRS} -g -O2 ${EXTRA_CFLAGS}
+
+OBJ = main.o </text><argument name="objects"/><text>
+
+main: $(OBJ)
+	$(CC) -O2 -g -o main $(OBJ) ${LIB_DIRS} ${EXTRA_LIBS_DIRS} -lcalendar -lodog -ldynamicfifo ${EXTRA_LIBS}
+clean:
+	rm -f main *.o 
+</text>
+
+</fileGenerator>

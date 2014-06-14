@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[
+#include <stdlib.h>
+#include <float.h>
+#include <stdio.h>
+
+extern double startTime;
+extern double stopTime;
+
+extern void ]]></text>
+
+<argument name="toplevelName"/>
+
+<text>_init();
+extern void </text>
+
+<argument name="toplevelName"/>
+
+<text>_compute();
+extern void </text>
+
+<argument name="toplevelName"/>
+
+<text><![CDATA[_finish();
+
+int
+main(int argc, char **args) {
+
+    if(argc != 1 && argc != 3) {
+        printf("main startTime stopTime\n");
+        return -1;
+    }
+    
+    if(argc == 1) {
+        startTime = 0.0;
+        stopTime = DBL_MAX;
+    }
+    else {
+        startTime = atof(args[1]);
+        stopTime = atof(args[2]);
+    }
+    
+    ]]></text>
+
+<argument name="toplevelName"/>
+
+<text>_init();
+    </text>
+    
+<argument name="toplevelName"/>
+
+<text>_compute();
+    </text>
+    
+<argument name="toplevelName"/>
+
+<text>_finish();
+
+}
+</text>
+
+</fileGenerator>

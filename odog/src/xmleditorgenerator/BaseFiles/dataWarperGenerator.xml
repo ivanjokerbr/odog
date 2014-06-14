@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+<fileGenerator>
+
+<text>package </text><argument name="packageName"/><text>;
+
+import odog.syntax.Nodes.*;
+import java.util.*;
+import xmleditorgenerator.BaseFiles.*;
+
+public class </text><argument name="elementName"/><text>DataWarper extends DataWarper {
+
+    public </text><argument name="elementName"/><text>DataWarper(Object element) {
+        dataElement = element;
+    }
+
+    /////////////////////////////////////////////////////////////////
+        
+    public void setElement(String type, Object value)  {</text>
+        <argument name="setElementBody"/><text>
+    }
+
+    public Object getElement(String type) {</text>
+        <argument name="getElementBody"/><text>
+        return null;
+    }
+
+    public Object newElement(String type) {</text>
+        <argument name="newElementBody"/><text>
+        return null;
+    }
+
+    public Iterator elementIterator(String type) {</text>
+        <argument name="elementIteratorBody"/><text>
+        return null;
+    }
+ 
+    public String addElement(String type, Object obj) {</text>
+        <argument name="addElementBody"/><text>
+        return null;
+    }
+
+    public void removeElement(String type, Object obj) {</text>
+        <argument name="removeElementBody"/><text>
+    }
+   
+    public String setAttribute(String name, String value) {</text>
+        <argument name="setAttributeBody"/><text>
+        return null;
+    }
+
+    public String getAttribute(String name)  {</text>
+       <argument name="getAttributeBody"/><text>
+       return null;
+    }
+}</text>
+</fileGenerator>

@@ -1,0 +1,1 @@
+PT.attribute.x( EX.attributeClass.class(class[hasData] = "true" && x -> class) => EX.value.y(y -> x || (x -> y && y[isDefault] = "true")) )

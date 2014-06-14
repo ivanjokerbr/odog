@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
+<fileGenerator>
+
+<text>package </text><argument name="packageName"/><text>;
+import java.awt.*;
+import javax.swing.*;
+import java.util.*;
+import xmleditorgenerator.BaseFiles.*;
+import xmleditorgenerator.SpringUtilities;
+
+public class </text><argument name="elementName"/><text>Panel extends XMLPanel {
+        
+    public String [] listElements = {</text><argument name="listElements"/><text>};
+    public Class [] listElementsClass = {</text><argument name="listElementsClass"/><text>};
+    public String [] listElementsLabels = {</text><argument name="listElementsLabels"/><text>};
+    public JScrollPane [] listElementsSP = new JScrollPane[listElements.length]; 
+        
+    public String [] attributeElements = {</text><argument name="attributeElements"/><text>};
+    public JTextField [] attributeElementsTF = new JTextField[attributeElements.length];
+        
+    public String [] necessaryElements =  {</text><argument name="necessaryElements"/><text>};
+    public Class  [] necessaryElementsClass = {</text><argument name="necessaryElementsClass"/><text>};
+    public String [] necessaryElementsLabel = {</text><argument name="necessaryElementsLabel"/><text>};
+        
+    public String [] optionalElements = {</text><argument name="optionalElements"/><text>};
+    public String [] optionalElementsLabel = {</text><argument name="optionalElementsLabel"/><text>};
+    public Class  [] optionalElementsClass = {</text><argument name="optionalElementsClass"/><text>};
+    public JButton [] optionalElementsButton;
+    
+    public </text><argument name="elementName"/><text>Panel() {
+        super();
+    }    
+
+    public void setDataWarper(Object obj, TransactionManagerContainer editor) {
+       artifactEditor = editor;
+       dataWarper = new </text><argument name="elementName"/><text><![CDATA[DataWarper(obj);
+       createPanel();
+    }
+ 
+    public int getListElementsSize() {
+       return listElements.length;
+    }
+   
+    public int getAttributeElementsSize() {
+       return attributeElements.length;
+    }
+   
+    public int getNecessaryElementsSize() {
+       return necessaryElements.length;
+    }
+     
+    public int getOptionalElementsSize() {
+        return optionalElements.length;
+    }
+    
+    public void createPanel() {
+        setLayout(new BorderLayout());
+
+	JPanel elementsPanel = new JPanel();
+        SpringLayout elementsLayout = new SpringLayout();
+        elementsPanel.setLayout(elementsLayout);
+       
+        for(int i = 0;i < listElements.length;i++) {
+  	    DefaultListModel lm = new DefaultListModel();
+            Iterator ite = dataWarper.elementIterator(listElements[i]);
+            while(ite != null && ite.hasNext()) {
+                lm.addElement(ite.next());
+            }
+            final JList list = new JList(lm);
+            list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            listElementsSP[i] = new JScrollPane(list); 
+
+            final String element = listElements[i];
+            final Class elementPanel = listElementsClass[i];
+
+            JPopupMenu menu = new JPopupMenu();
+            JMenuItem item = new JMenuItem("Add " + listElementsLabels[i]);
+            item.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    // 1. recupera o elemento ou cria ele
+                    Object obj = dataWarper.newElement(element);
+
+                    // 2. cria o respectivo painel para o elemento
+                    try {
+                        String msg = null;
+                        DataWarper w = null;
+                        do {
+                            XMLPanel panel = (XMLPanel) elementPanel.newInstance();                        
+                            panel.setDataWarper(obj, artifactEditor);
+                            
+                            // 3. cria o dialog para mostra-lo
+                            JDialog dialog = new JDialog(owner, true);
+                            dialog.setTitle(element + " Editor");
+                            dialog.setContentPane(panel);
+                            panel.setOwner(dialog);
+
+                            dialog.setBounds(owner.getX() + 10, owner.getY() + 10, 
+                                    500, 150 * panel.getListElementsSize() + 
+                                    50 * panel.getAttributeElementsSize() +
+                                    50 * panel.getNecessaryElementsSize() +
+                                    50 * panel.getOptionalElementsSize());
+                            dialog.setVisible(true);
+
+                            // 4. adiciona o elemento editado
+                            w = panel.getDataWarper();
+
+                            // apertou cancel
+                            if(w.getDataElement() == null) break;
+
+                            // Tenta inserir
+                            msg = dataWarper.addElement(element, w.getDataElement());
+                            if(msg != null) {
+                                JOptionPane.showMessageDialog(owner, "Error while adding " +
+                                        element + " : " + msg);
+                            }
+                        } while(msg != null);
+
+                        if(w.getDataElement() != null) {
+                            DefaultListModel model = (DefaultListModel) list.getModel();
+                            model.addElement(w.getDataElement());
+
+                            if(artifactEditor != null) {
+                                TransactionManager manager = artifactEditor.getTransactionManager();
+                                Transaction t = new Transaction(TransactionType.ADD_ELEMENT, 
+                                        w.getDataElement());
+                                manager.addTransaction(t);
+                            }
+                        }
+                    }
+                    catch(Exception ex) {
+                        System.out.println(ex);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            menu.add(item); 
+
+            item = new JMenuItem("Edit " + listElementsLabels[i]);
+            item.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    Object obj = list.getSelectedValue();
+                    if(obj == null) return;
+                    
+                    try {
+                        XMLPanel panel = (XMLPanel) elementPanel.newInstance();
+                        panel.setDataWarper(obj, artifactEditor);                        
+
+                        // 3. cria o dialog para mostra-lo
+                        JDialog dialog = new JDialog(owner, true);
+                        dialog.setTitle(element + " Editor");
+                        dialog.setContentPane(panel);
+                        panel.setOwner(dialog);
+
+                        dialog.setBounds(owner.getX() + 10, owner.getY() + 10, 
+                                500, 150 * panel.getListElementsSize() + 
+                                50 * panel.getAttributeElementsSize() +
+                                50 * panel.getNecessaryElementsSize() +
+                                50 * panel.getOptionalElementsSize());
+                        dialog.setVisible(true);                        
+                    }
+                    catch(Exception ex) {
+                        System.out.println(ex);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            menu.add(item);
+
+            item = new JMenuItem("Delete " + listElementsLabels[i]);
+            item.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    Object obj = list.getSelectedValue();
+                    if(obj == null) return;
+                    
+                    int answer = JOptionPane.showConfirmDialog(owner, "Are you sure about " +
+                        "removing " + obj.toString());
+                    if(answer == JOptionPane.NO_OPTION ||
+                        answer == JOptionPane.CANCEL_OPTION) {
+                        return;
+                    } 
+
+                    dataWarper.removeElement(element, obj);
+                    DefaultListModel lm = (DefaultListModel) list.getModel();
+                    lm.removeElement(obj);
+                    
+                    if(artifactEditor != null) {
+                        TransactionManager manager = artifactEditor.getTransactionManager();
+                        Transaction t = new Transaction(TransactionType.REMOVE_ELEMENT, 
+                                obj);
+                        manager.addTransaction(t);
+                    }
+                }
+            });
+            menu.add(item);
+
+            list.setComponentPopupMenu(menu);
+
+            JLabel label = new JLabel(listElementsLabels[i], JLabel.TRAILING);
+            label.setLabelFor(listElementsSP[i]);
+
+            elementsPanel.add(label);                                   
+            elementsPanel.add(listElementsSP[i]);
+        }
+
+        // *** elementos individuais necessarios
+        for(int i = 0;i < necessaryElements.length;i++) {
+            JLabel label = new JLabel(necessaryElementsLabel[i], JLabel.TRAILING);
+            JButton button = new JButton(necessaryElements[i]);
+
+            final String element = necessaryElements[i];
+            final Class elementPanel = necessaryElementsClass[i];
+          
+            button.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    // 1. recupera o elemento ou cria ele
+                    Object obj = dataWarper.getElement(element);
+		    if(obj == null) {
+                        obj = dataWarper.newElement(element);
+                    }
+                    // 2. cria o respectivo painel para o elemento
+                    try {
+                        XMLPanel panel = (XMLPanel) elementPanel.newInstance();
+                        panel.setDataWarper(obj, artifactEditor);
+
+                    // 3. cria o dialog para mostra-lo
+                        JDialog dialog = new JDialog(owner, true);
+                        dialog.setTitle(element + " Editor");
+                        dialog.setContentPane(panel);
+                        panel.setOwner(dialog);
+                        
+                        dialog.setBounds(owner.getX() + 10, owner.getY() + 10, 
+                                500, 150 * panel.getListElementsSize() + 
+                                50 * panel.getAttributeElementsSize() +
+                                50 * panel.getNecessaryElementsSize() +
+                                50 * panel.getOptionalElementsSize());
+                        dialog.setVisible(true);                        
+
+                      // 4. atribui o elemento editado
+                        DataWarper w = panel.getDataWarper();
+                        if(w.getDataElement() != null) {
+                            TransactionManager manager = artifactEditor.getTransactionManager();
+                            Transaction t = new Transaction(TransactionType.CHANGE_ELEMENT, 
+                                dataWarper.getDataElement(), element, 
+                                dataWarper.getElement(element), w.getDataElement());
+                            manager.addTransaction(t);    
+
+                            dataWarper.setElement(element, w.getDataElement());
+                        }
+                    }
+                    catch(Exception ex) {
+                        System.out.println(ex);
+                        ex.printStackTrace();
+                    }
+                }
+            });            
+
+            label.setLabelFor(button);
+
+            elementsPanel.add(label);
+            elementsPanel.add(button);
+        }        
+
+        optionalElementsButton = new JButton[optionalElements.length];
+        // *** elementos individuais opcionais
+        for(int i = 0;i < optionalElements.length;i++) {
+            final String element = optionalElements[i];
+            final Class elementPanel = optionalElementsClass[i];    
+            
+            final JCheckBox check = new JCheckBox("Has " + optionalElementsLabel[i]);
+            optionalElementsButton[i] = new JButton(optionalElements[i]);
+            
+            Object obj = dataWarper.getElement(element);
+            if(obj == null) {
+                check.setSelected(false);
+                optionalElementsButton[i].setEnabled(false);
+            }
+            else {
+                check.setSelected(true);
+                optionalElementsButton[i].setEnabled(true);
+            }
+            
+            final JButton jb = optionalElementsButton[i];
+            check.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    if(check.isSelected()) {
+                        jb.setEnabled(true);
+                    }
+                    else {
+                        jb.setEnabled(false);
+                    }
+                }
+            });
+
+            optionalElementsButton[i].addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    // 1. recupera o elemento ou cria ele
+                    Object obj = dataWarper.getElement(element);
+		    if(obj == null) {
+                        obj = dataWarper.newElement(element);
+                    }
+                    // 2. cria o respectivo painel para o elemento
+                    try {
+                        XMLPanel panel = (XMLPanel) elementPanel.newInstance();                       
+                        panel.setDataWarper(obj, artifactEditor);                                               
+
+                    // 3. cria o dialog para mostra-lo
+                        JDialog dialog = new JDialog(owner, true);
+                        dialog.setTitle(element + " Editor");
+                        dialog.setContentPane(panel);
+                        panel.setOwner(dialog);
+
+                        dialog.setBounds(owner.getX() + 10, owner.getY() + 10, 
+                                500, 150 * panel.getListElementsSize() + 
+                                50 * panel.getAttributeElementsSize() +
+                                50 * panel.getNecessaryElementsSize() +
+                                50 * panel.getOptionalElementsSize());
+                        dialog.setVisible(true);
+
+                      // 4. atribui o elemento editado
+                        DataWarper w = panel.getDataWarper();
+                        if(w.getDataElement() != null) {
+                            TransactionManager manager = artifactEditor.getTransactionManager();
+                            Transaction t = new Transaction(TransactionType.CHANGE_ELEMENT, 
+                                dataWarper.getDataElement(), element, 
+                                dataWarper.getElement(element), w.getDataElement());
+                            manager.addTransaction(t);
+
+                            dataWarper.setElement(element, w.getDataElement());
+                        }
+                    }
+                    catch(Exception ex) {
+                        System.out.println(ex);
+                        ex.printStackTrace();
+                    }
+                }
+            });
+            elementsPanel.add(check);
+            elementsPanel.add(optionalElementsButton[i]);
+        }
+
+        // *** Processa os atributos
+        for(int i = 0;i < attributeElements.length;i++) {
+            JLabel label = new JLabel(attributeElements[i], JLabel.TRAILING);
+            attributeElementsTF[i] = new JTextField(dataWarper.getAttribute(attributeElements[i]));
+
+            label.setLabelFor(attributeElementsTF[i]);
+
+            elementsPanel.add(label);
+            elementsPanel.add(attributeElementsTF[i]);
+        }
+
+        // Faz o layout
+        SpringUtilities.makeCompactGrid(elementsPanel, 
+            listElements.length + attributeElements.length + necessaryElements.length +
+            optionalElements.length, 2, 6, 6, 6, 6);       
+
+        add(elementsPanel, BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel();        
+        JButton commit = new JButton("commit");
+        commit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+               boolean ok = true;
+               int i;
+               String msg = null;
+               for(i = 0;i < attributeElements.length;i++) {
+                   if(attributeElementsTF[i].getText().matches("[\\s]*")) {
+                      ok = false;
+                      msg =  new String("Attribute " + attributeElements[i] +
+                       " has incorrect value = " + attributeElementsTF[i].getText()); 
+                      break;
+                   }
+                   Object valueBefore = dataWarper.getAttribute(attributeElements[i]);
+                   if(valueBefore.equals(attributeElementsTF[i].getText())) {
+                       continue;
+                   }
+                   msg = dataWarper.setAttribute(attributeElements[i],
+                           attributeElementsTF[i].getText());
+
+                   if(msg != null) {
+                       ok = false;
+                       break;
+                   }
+                   
+                  TransactionManager manager = artifactEditor.getTransactionManager();
+                  Transaction t = new Transaction(TransactionType.CHANGE_ELEMENT, 
+                        dataWarper.getDataElement(), attributeElements[i], 
+                        valueBefore, attributeElementsTF[i].getText());
+                  manager.addTransaction(t);
+               }
+               
+               if(!ok) {
+                   JOptionPane.showMessageDialog(owner, msg);  
+                   return;
+               }
+               
+               // 2. verifica se todos os elementos obrigatorios foram editados
+               for(i = 0;i < necessaryElements.length;i++) {
+                   Object obj = dataWarper.getElement(necessaryElements[i]);
+                   if(obj == null) {
+                       ok = false;
+                       msg = new String("Element " + necessaryElements[i] + 
+                           " must be edited.");
+                       break;
+                   }
+               }
+               
+               // 3. Verifica que elemento opcional foi selecionado. Os que nao foram
+               // sao apagados.
+               for(i = 0;i < optionalElements.length;i++) {
+                   if(!optionalElementsButton[i].isEnabled() &&
+                        dataWarper.getElement(optionalElements[i]) != null) {
+                       TransactionManager manager = artifactEditor.getTransactionManager();
+                       Transaction t = new Transaction(TransactionType.CHANGE_ELEMENT, 
+                            dataWarper.getDataElement(), optionalElements[i], 
+                            dataWarper.getElement(optionalElements[i]), null);
+                       manager.addTransaction(t);                   
+
+                       dataWarper.setElement(optionalElements[i], null);                                               
+                   }
+               }
+               
+               if(ok) {
+                 owner.dispose();
+               }
+               else {
+                   JOptionPane.showMessageDialog(owner, msg);  
+               }
+            }
+        });
+        buttonPanel.add(commit);
+
+        JButton cancel = new JButton("cancel");        
+        cancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dataWarper.setDataElement(null);               
+                owner.dispose();
+            }
+        });
+        buttonPanel.add(cancel);
+
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+    
+    private TransactionManagerContainer artifactEditor;
+    
+}]]></text>
+
+</fileGenerator>

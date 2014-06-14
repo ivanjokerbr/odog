@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE fileGenerator PUBLIC "-//ODOGODOGFILEGENERATOR//DTD//EN" "">
+
+<fileGenerator>
+
+<text><![CDATA[#include <stdlib.h>
+#include "mailbox.h"
+#include "tokliBIOS.h"
+#include "dynamicDspFifo.h"
+#include "copyData.h"
+
+#define WRITE_BLOCKED 4
+#define MY_ID ]]></text><argument name="myId"/><text><![CDATA[
+
+#define BOUNDARY_ID ]]></text><argument name="boundaryId"/><text>
+
+#define NCOMPONENTS </text><argument name="ncomponents"/><text>
+#define NBOUNDARY </text><argument name="nboundary"/><text>
+
+</text>
+<argument name="instanceExecutionMethods"/>
+<argument name="signals"/>
+<text>
+
+extern int componentsState[NCOMPONENTS];
+extern int writeBlockedData[NBOUNDARY];
+extern char *writeBlockedFifo[NBOUNDARY];
+
+extern struct dsptask *getTask();
+
+static int
+numberOfConnections(char *port) {
+</text>
+
+<argument name="numberOfConnectionsBody"/>
+<text>
+    return 0;
+} 
+
+static char *
+nameOfConnection(char *port, int number) {
+</text>
+<argument name="nameOfConnectionBody"/>
+<text>
+    return NULL;
+}
+
+static void
+resetSampleRates() {
+</text>
+<argument name="resetSampleRatesBody"/>
+<text>
+}
+
+static void
+setSampleRate(char *p1, int p2) {
+</text>
+<argument name="setSampleRateBody"/>
+<text>
+}
+
+static void
+stopExecution() {
+</text>
+<argument name="stopExecutionBody"/>
+<text>
+}
+    
+static int
+getSampleRate(char *p1) {
+</text>
+<argument name="getSampleRateBody"/>
+<text>
+
+    return 0;
+}
+
+static void
+writeBlocked(char *p1, int p2) {
+    writeBlockedFifo[BOUNDARY_ID] = p1;
+    writeBlockedData[BOUNDARY_ID] = p2;
+    componentsState[MY_ID] = WRITE_BLOCKED;
+}
+
+static void
+receive(char *p1, void **p2, int *p3) {
+</text>
+<argument name="receiveBody"/>
+<text>
+}
+
+static void
+send(char *p1, void *p2, int length) {
+  odog_data_pkg *p;
+</text>
+<argument name="sendBody"/>
+<text><![CDATA[
+}
+
+static void
+sendAll(char *p1, void *p2, int length) {
+int n, i;
+char *qname;
+
+  n = numberOfConnections(p1);
+  for(i = 0;i < n;i++) {
+      qname = nameOfConnection(p1, i);
+      send(qname, p2, length);
+  }
+}
+
+static char
+canReceive(char *p1, int p2) {
+    return 1;
+}
+
+static char
+canReceiveAll(char *p1, int p2) {
+     return 1;
+}
+
+char
+canSend_]]></text><argument name="cname"/><text><![CDATA[(char *p1, int p2) {
+]]></text>
+<argument name="canSendBody"/>
+<text><![CDATA[
+    return 1;
+}
+
+static char
+canSend(char *p1, int p2) {
+    return canSend_]]></text><argument name="cname"/><text><![CDATA[(p1, p2);
+}
+
+
+static char
+canSendAll(char *p1, int p2) {
+int n, i;
+char *qname;
+
+     n = numberOfConnections(p1);
+     for(i = 0;i < n;i++) {
+         qname = nameOfConnection(p1, i);
+         if(canSend(qname, p2) == 0) return 0;
+     }
+     return 1;
+}
+]]></text>
+
+<argument name="attributes"/>
+<argument name="initModule"/>
+<argument name="computeModule"/>
+<argument name="finishModule"/>
+
+</fileGenerator>

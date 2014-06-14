@@ -1,0 +1,1 @@
+PT.topology.top( EX.attribute.moc( moc[name] = "MOC" && top -> moc && EX.value.v( v[associatedAttribute] = moc[fullName] && v[valueExpr] = "DE" ))  => ( ~( EX.topology.top2 ( top2 ->* top && EX.attribute.moc( moc[name] = "MOC" && top2 -> moc && EX.value.v( v[associatedAttribute] = moc[fullName] && v[valueExpr] != "DE" )) ) ) ))               

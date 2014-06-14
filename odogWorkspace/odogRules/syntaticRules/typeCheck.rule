@@ -1,0 +1,11 @@
+THE_FIRST(topver, v, at) = ~(EX.value.v2(topver ->* v2 && v2 -> at    ));
+
+CHECK_PORTYPES(top, topver, con, p1, p2, at, at2) = PT.value.v( topver ->* v && (v -> at || at ->v ) && [THE_FIRST topver, v, at]  => PT.value.v2( topver ->* v2 && (v2 -> at2 || at2 -> v2) && [THE_FIRST topver, v2, at2] =>v[valueExpr] = v2[valueExpr] ));     
+
+GET_PORTYPES(top, topver, con, p1, p2) = PT.attribute.at( at[name] = "portType" && p1 -> at => PT.attribute.at2( at2[name] = "portType" && p2 -> at2 => [CHECK_PORTYPES top, topver, con, p1, p2, at, at2] ));
+
+CHECK_CON(top, topver, con) = EX.dport.p1(con -> p1 && EX.dport.p2( con -> p2 && p1[fullName] != p2[fullName] => [GET_PORTYPES top, topver, con, p1, p2]));
+
+FIND_PORTS(top, topver) = PT.connection.c1( (top -> c1 || topver -> c1) => [CHECK_CON top, topver, c1] );
+
+PT.topology.top( PT.topologyVersion.topver( top -> topver &&  [FIND_PORTS top, topver] ))

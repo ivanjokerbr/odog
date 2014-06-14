@@ -1,0 +1,5 @@
+OTHER_DEFV(ver, dv) = EX.defVer.dv2(ver -> dv2 && dv2[name] != dv[name] && dv2[instanceName] = dv[instanceName]);
+
+DEFVER_SEL(ver, ains) = EX.defVer.dv(ver -> dv && dv[instanceName] = ains[localInstanceName]  && ( ~( [OTHER_DEFV ver,dv ]) ) );
+
+PT.topologyVersion.ver(PT.compInstance.ains(ver -> ains => [DEFVER_SEL ver, ains] ))

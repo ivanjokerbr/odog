@@ -1,0 +1,5 @@
+PORT_CONT(p1, p2) = PT.dport.dp( p1 ->* dp  => (~(p2 ->* dp)));
+
+MULT_EXP(cont1, cont2) = PT.exportedPort.p1(PT.exportedPort.p2((cont1 -> p1 && cont2->p2 && p1[fullName] != p2[fullName]) => [PORT_CONT p1,p2] ));
+
+PT.topology.top( [MULT_EXP top, top]  && PT.topologyVersion.ver(top -> ver => [MULT_EXP top, ver])) && PT.topologyVersion.ver( [MULT_EXP ver, ver] )
