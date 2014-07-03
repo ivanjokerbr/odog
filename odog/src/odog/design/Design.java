@@ -19,7 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -41,7 +41,7 @@ public class Design extends MetaArtifact implements MetaArtifactStatusListener {
 
     public Design() {
         super();
-        artifactsBeingEdited = new Hashtable<Artifact, ArtifactEditor>();
+        artifactsBeingEdited = new HashMap<Artifact, ArtifactEditor>();
         tree = new DefaultMutableTreeNode(this);
 
         parent = null;
@@ -183,17 +183,19 @@ public class Design extends MetaArtifact implements MetaArtifactStatusListener {
     }
 
     public void closeAllArtifactEditors() {
-        Enumeration<Artifact> en = artifactsBeingEdited.keys();
-        while (en.hasMoreElements()) {
-            Artifact a = en.nextElement();
+        //Enumeration<Artifact> en = artifactsBeingEdited.keySet();
+        for(Artifact a : artifactsBeingEdited.keySet()) {
+        //while (en.hasMoreElements()) {
+            //Artifact a = en.nextElement();
             closeArtifactEditor(a);
         }
     }
 
     public void closeArtifactEditor(ArtifactEditor ed) {
-        Enumeration<Artifact> en = artifactsBeingEdited.keys();
-        while (en.hasMoreElements()) {
-            Artifact a = en.nextElement();
+        //Enumeration<Artifact> en = artifactsBeingEdited.keys();
+        for(Artifact a : artifactsBeingEdited.keySet()) {
+        //while (en.hasMoreElements()) {
+//            Artifact a = en.nextElement();
             if (artifactsBeingEdited.get(a).equals(ed)) {
                 closeArtifactEditor(a);
             }
@@ -305,7 +307,7 @@ public class Design extends MetaArtifact implements MetaArtifactStatusListener {
     /////////////////////////////// PROTECTED VARIABLES ////////////////////////
     
     // uma associacao dos artefatos que estao sendo editados     
-    private Hashtable<Artifact, ArtifactEditor> artifactsBeingEdited;
+    private HashMap<Artifact, ArtifactEditor> artifactsBeingEdited;
     
     // no que visualiza os elementos deste design na janela da interface
     private DefaultMutableTreeNode tree;

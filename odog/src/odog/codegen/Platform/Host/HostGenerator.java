@@ -29,8 +29,7 @@ import odog.codegen.util.FileGeneratorParser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -83,7 +82,7 @@ public class HostGenerator extends CodeGenerator {
         }
 
         // 3. Get attribute value map
-        Hashtable<Attr,Value> attrValueMap = toplevel.buildValuesTable(ver);
+        HashMap<Attr,Value> attrValueMap = toplevel.buildValuesTable(ver);
 
         // 4. Builds the topology graph for all the specification
         TopologyGraph tgraph = new TopologyGraph();
@@ -183,9 +182,7 @@ public class HostGenerator extends CodeGenerator {
         makefileg.setArgumentValue("libraries", includ); */
 
         String objs = "";
-        Iterator site = isemcg.getGeneratedObjects().iterator();
-        while(site.hasNext()) {
-            String object = (String) site.next();
+        for( String object : isemcg.getGeneratedObjects() ) {
             objs = objs + " " + object + ".o";
         }
 

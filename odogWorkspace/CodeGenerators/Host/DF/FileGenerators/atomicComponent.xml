@@ -15,14 +15,14 @@
 <text>
 
 static int
-numberOfConnections(char *port) {
+odog_numberOfConnections(char *port) {
 </text>
 
 <argument name="numberOfConnectionsBody"/>
 <text>} 
 
 static char *
-nameOfConnection(char *port, int number) {
+odog_nameOfConnection(char *port, int number) {
 </text>
 <argument name="nameOfConnectionBody"/>
 <text>
@@ -30,28 +30,28 @@ nameOfConnection(char *port, int number) {
 }
 
 static void
-setSampleRate(char *p1, short p2) {
+odog_setSampleRate(char *p1, short p2) {
 </text>
 <argument name="setSampleRateBody"/>
 <text>
 }
 
 static short
-getSampleRate(char *p1) {
+odog_getSampleRate(char *p1) {
 </text>
 <argument name="getSampleRateBody"/>
 <text>
 }
 
 static void
-stopExecution() {
+odog_stopExecution() {
 </text>
 <argument name="stopExecutionBody"/>
 <text>
 }
 
 static void
-receive(char *p1, void **p2, size_t *p3) {
+odog_receive(char *p1, void **p2, size_t *p3) {
 void **vec;
 </text>
 <argument name="receiveBody"/>
@@ -59,7 +59,7 @@ void **vec;
 }
 
 static void
-send(char *p1, void *p2, size_t length) {
+odog_send(char *p1, void *p2, size_t length) {
   odog_data_pkg *p;
 </text>
 <argument name="sendBody"/>
@@ -67,34 +67,34 @@ send(char *p1, void *p2, size_t length) {
 }<![CDATA[
 
 static void
-sendAll(char *p1, void *p2, size_t length) {
+odog_sendAll(char *p1, void *p2, size_t length) {
 int n, i;
 char *qname;
 
-  n = numberOfConnections(p1);
+  n = odog_numberOfConnections(p1);
   for(i = 0;i < n;i++) {
-      qname = nameOfConnection(p1, i);
-      send(qname, p2, length);
+      qname = odog_nameOfConnection(p1, i);
+      odog_send(qname, p2, length);
   }
 }
 
 static char
-canReceive(char *p1, int p2) {
+odog_canReceive(char *p1, int p2) {
     return 1;
 }
 
 static char
-canReceiveAll(char *p1, int p2) {
+odog_canReceiveAll(char *p1, int p2) {
     return 1;
 }
 
 static char
-canSend(char *p1, int p2) {
+odog_canSend(char *p1, int p2) {
     return 1;
 }
 
 static char
-canSendAll(char *p1, int p2) {
+odog_canSendAll(char *p1, int p2) {
     return 1;
 }
 ]]></text>

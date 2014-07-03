@@ -16,7 +16,7 @@ import odog.design.DesignRepository;
 import java.io.File;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -255,7 +255,7 @@ public class Checker {
         Iterator ite = top.versionsIterator();
         while(ite.hasNext()) {
             VersionBase vb = (VersionBase) ite.next();
-            Hashtable<Attr,Value> values = top.buildValuesTable(vb);
+            HashMap<Attr,Value> values = top.buildValuesTable(vb);
 
             Collection<Node> cons = model.nodeTypeCollection(Node.CONNECTION);
             for(Node n : cons) {
@@ -353,7 +353,7 @@ public class Checker {
         Iterator ite = top.versionsIterator();
         while(ite.hasNext()) {
             VersionBase vb = (VersionBase) ite.next();
-            Hashtable<Attr,Value> values = top.buildValuesTable(vb);
+            HashMap<Attr,Value> values = top.buildValuesTable(vb);
             
             String isem;
             Attr at = top.getAttribute("ISEM");
@@ -381,7 +381,7 @@ public class Checker {
     }
 
     private boolean checkAttrValues(Topology top, VersionBase vb, 
-            Hashtable<Attr, Value> values, String currentISemValue) {
+            HashMap<Attr, Value> values, String currentISemValue) {
 
         Iterator ite = top.attributesIterator();
         while(ite.hasNext()) {

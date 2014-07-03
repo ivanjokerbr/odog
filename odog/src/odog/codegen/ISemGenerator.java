@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,19 +47,19 @@ import java.util.Set;
  */
 public class ISemGenerator {
 
-    public ISemGenerator(Hashtable <Attr, Value> attrValueMap) {
+    public ISemGenerator(HashMap <Attr, Value> attrValueMap) {
         /*clibDirList = new LinkedList<String>();
         clibNameList = new LinkedList<String>();
         cincludeDirList = new LinkedList<String>();*/
         
-        generatedObjects = new Hashtable<String, String>();
+        generatedObjects = new HashMap<String, String>();
         
-        inportsQueue = new Hashtable<VirtualPort,  LinkedList<String>>();
-        outportsQueue = new Hashtable<String, LinkedList<String>>();
-        inconQueue = new Hashtable<String, String>();
-        outconQueue = new Hashtable<String, LinkedList<String>>();
-        componentIdTable = new Hashtable<String, Integer>();
-        queueDataType = new Hashtable<String, String>();
+        inportsQueue = new HashMap<VirtualPort,  LinkedList<String>>();
+        outportsQueue = new HashMap<String, LinkedList<String>>();
+        inconQueue = new HashMap<String, String>();
+        outconQueue = new HashMap<String, LinkedList<String>>();
+        componentIdTable = new HashMap<String, Integer>();
+        queueDataType = new HashMap<String, String>();
         
         this.attrValueMap = attrValueMap;
         boundarySignals = new LinkedList<BoundaryData>();
@@ -192,7 +192,7 @@ public class ISemGenerator {
             return false;
         }
         
-        Hashtable <ComponentGraphNode, Object> nodeTable = new Hashtable<ComponentGraphNode, Object>();
+        HashMap <ComponentGraphNode, Object> nodeTable = new HashMap<ComponentGraphNode, Object>();
         for(ComponentGraphNode node : process) {
             if(!dfsSearch(node, nodeTable)) {
                 report = "Topology contains cycles that cannot be removed.";   
@@ -200,7 +200,7 @@ public class ISemGenerator {
             }
         }
         
-        Hashtable<ComponentGraphNode, Object> processed = new Hashtable<ComponentGraphNode, Object>();
+        HashMap<ComponentGraphNode, Object> processed = new HashMap<ComponentGraphNode, Object>();
         while(process.size() > 0) {
             ComponentGraphNode node = process.removeFirst();
             if(processed.containsKey(node)) {
@@ -251,7 +251,7 @@ public class ISemGenerator {
 
     protected void generateAtomicComponents(AtomicComponentGenerator gen, String containerName, 
             ComponentGraphNode node, String outputDir, String designLocation, 
-            Hashtable <Attr, Value> attrValueMap, LinkedList<BoundaryData> outsideBinfo,
+            HashMap <Attr, Value> attrValueMap, LinkedList<BoundaryData> outsideBinfo,
             String objectBuilder) {
         if(node.getType() != NodeType.ATOMIC) return;
 
@@ -292,7 +292,7 @@ public class ISemGenerator {
     }
 
     protected void generateCommunicationMethods(ComponentGraphNode node, 
-            AtomicComponentGenerator gen, Hashtable <Attr, Value> attrValueMap, 
+            AtomicComponentGenerator gen, HashMap <Attr, Value> attrValueMap, 
             String containerName, LinkedList<BoundaryData> outsideBinfo) {
         return;
     }        
@@ -321,7 +321,7 @@ public class ISemGenerator {
     // TODO...remove the code related to boundaries to another method, in order to
     // make it clearer.
     protected void buildSignalVarLists(String isem, ComponentGraphNode node, 
-            Hashtable <Attr, Value> attrValueMap, 
+            HashMap <Attr, Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
         // given the name of a port, or connection, will list all the *variable names*
         // associated with them
@@ -442,7 +442,7 @@ public class ISemGenerator {
     }    
 
     protected void generateCompositeComponents(Graph g, String outputDir, 
-            String designLocation, Hashtable <Attr,Value> attrValueMap, 
+            String designLocation, HashMap <Attr,Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
 
         Iterator ite = g.getVertices().iterator();
@@ -478,7 +478,7 @@ public class ISemGenerator {
     
     protected void generateConnectionMethods(AtomicComponentGenerator gen, 
             ComponentGraphNode node, LinkedList<BoundaryData> outsideBinfo) {
-        Hashtable<String, LinkedList> tab = new Hashtable<String, LinkedList>();
+        HashMap<String, LinkedList> tab = new HashMap<String, LinkedList>();
 
         Iterator ite = node.getInEdges().iterator();
         while(ite.hasNext()) {
@@ -574,7 +574,7 @@ public class ISemGenerator {
     ///////////////////////////// PRIVATE METHODS //////////////////////////////
 
     private boolean dfsSearch(ComponentGraphNode node, 
-            Hashtable<ComponentGraphNode, Object> nodeTable) {
+            HashMap<ComponentGraphNode, Object> nodeTable) {
         if(nodeTable.containsKey(node)) return false;
         
         nodeTable.put(node, new Object());
@@ -676,7 +676,7 @@ public class ISemGenerator {
         // The LIBC_DIRS, INCLUDE_DIRS E LIBCNAMES attributes are also processed
         Method method = ver.getMethod("init");        
         if(method == null) {
-            gen.setInitModule("void init() {\n}\n");
+            gen.setInitModule("void odog_init() {\n}\n");
         }
         else {
             initURL = method.getCodeURL();
@@ -685,7 +685,7 @@ public class ISemGenerator {
 
         method = ver.getMethod("compute");
         if(method == null) {
-            gen.setComputeModule("void compute() {\n}\n");
+            gen.setComputeModule("void odog_compute() {\n}\n");
         }
         else {
             computeURL = method.getCodeURL();
@@ -698,7 +698,7 @@ public class ISemGenerator {
         
         method = ver.getMethod("finish");
         if(method == null) {
-            gen.setFinishModule("void finish() {\n}\n");
+            gen.setFinishModule("void odog_finish() {\n}\n");
         }
         else {
             finishURL = method.getCodeURL();
@@ -711,7 +711,7 @@ public class ISemGenerator {
         
         method = ver.getMethod("fixpoint");
         if(method == null) {
-            gen.setFixpointModule("void fixpoint() {\n}\n");
+            gen.setFixpointModule("void odog_fixpoint() {\n}\n");
         }
         else {
             fixpointURL = method.getCodeURL();
@@ -773,7 +773,7 @@ public class ISemGenerator {
     ///////////////////////// PROTECTED VARIABLES //////////////////////////////    
 
     protected String report;            
-    protected Hashtable<String, String> generatedObjects;
+    protected HashMap<String, String> generatedObjects;
 
     // for the respective attributes of an atomic component written in C
  /*
@@ -786,14 +786,14 @@ public class ISemGenerator {
 
     // These tables are with respect to an atomic component, and valid only when
     // processing one.
-    protected Hashtable<VirtualPort, LinkedList<String>> inportsQueue;
-    protected Hashtable<String, LinkedList<String>> outportsQueue;
-    protected Hashtable<String, String> inconQueue;
-    protected Hashtable<String, LinkedList<String>> outconQueue;
-    protected Hashtable<String, Integer> componentIdTable;
-    protected Hashtable<String, String> queueDataType;
+    protected HashMap<VirtualPort, LinkedList<String>> inportsQueue;
+    protected HashMap<String, LinkedList<String>> outportsQueue;
+    protected HashMap<String, String> inconQueue;
+    protected HashMap<String, LinkedList<String>> outconQueue;
+    protected HashMap<String, Integer> componentIdTable;
+    protected HashMap<String, String> queueDataType;
  
-    protected Hashtable <Attr, Value> attrValueMap;
+    protected HashMap <Attr, Value> attrValueMap;
     protected LinkedList<BoundaryData> boundarySignals;
     
     /////////////////////////// PRIVATE VARIABLES //////////////////////////////

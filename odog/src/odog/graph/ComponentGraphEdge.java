@@ -11,7 +11,7 @@ import odog.syntax.Nodes.Connection;
 import odog.syntax.Nodes.VirtualPort;
 import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
-import java.util.Hashtable;
+import java.util.HashMap;
 import odog.syntax.Nodes.Attr;
 import odog.syntax.Nodes.Value;
 
@@ -23,7 +23,7 @@ public class ComponentGraphEdge extends DirectedSparseEdge {
     
     /** Creates a new instance of CompGraphEdge */
     public ComponentGraphEdge(Vertex sourceNode, Vertex destNode, VirtualPort source, 
-            VirtualPort sink, Connection connection, Hashtable<Attr,Value> attrValueMap) {
+            VirtualPort sink, Connection connection, HashMap<Attr,Value> attrValueMap) {
         super(sourceNode, destNode);
      
         isinfo = new BaseEdgeISemInfo();

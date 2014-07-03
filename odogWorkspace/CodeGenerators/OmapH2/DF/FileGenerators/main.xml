@@ -7,22 +7,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 extern void ]]></text>
 
 <argument name="toplevelName"/>
 
-<text>_init();
+<text>_odog_init();
 extern void </text>
 
 <argument name="toplevelName"/>
 
-<text>_compute();
+<text>_odog_compute();
 extern void </text>
 
 <argument name="toplevelName"/>
 
-<text><![CDATA[_finish();
+<text><![CDATA[_odog_finish();
 
 int
 main(int argc, char **args) {

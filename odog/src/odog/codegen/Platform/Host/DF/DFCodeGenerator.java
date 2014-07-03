@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -41,7 +41,7 @@ import java.util.LinkedList;
  */
 public class DFCodeGenerator extends ISemGenerator {
     
-    public DFCodeGenerator(Hashtable <Attr, Value> attrValueMap) {
+    public DFCodeGenerator(HashMap <Attr, Value> attrValueMap) {
         super(attrValueMap);
     }
     
@@ -134,13 +134,13 @@ public class DFCodeGenerator extends ISemGenerator {
     }
     
     protected void generateCommunicationMethods(ComponentGraphNode node, 
-            AtomicComponentGenerator gen, Hashtable <Attr, Value> attrValueMap,
+            AtomicComponentGenerator gen, HashMap <Attr, Value> attrValueMap,
             String containerName, LinkedList<BoundaryData> outsideBinfo) {
         String loc = System.getenv("ODOG_CODEGENERATORS");
         loc = BaseConfiguration.appendSlash(loc) + "Host/DF/FileGenerators/";
         
         // verificar a implementacao dessse port queue 
-        Hashtable <String, String> portQueueTable = new Hashtable<String, String>();
+        HashMap <String, String> portQueueTable = new HashMap<String, String>();
       
         // Communication methods on input ports
         Iterator ite = inportsQueue.keySet().iterator();
@@ -200,7 +200,7 @@ public class DFCodeGenerator extends ISemGenerator {
     
     private void generateTopology(String instanceName, Topology toplevel, 
             Hver topVersion, Graph g, String designLocation, String outputDir,
-            Hashtable <Attr, Value> attrValueMap, 
+            HashMap <Attr, Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
         String cgloc = System.getenv("ODOG_CODEGENERATORS");
         String loc = BaseConfiguration.appendSlash(cgloc) + "Host/DF/FileGenerators/";
@@ -216,26 +216,26 @@ public class DFCodeGenerator extends ISemGenerator {
         //String name = Node.replaceDotForUnd(topologicalSort[0].getComponent().getFullInstanceName());
         
         String name = topologicalSort[0].getISInfo().getCGName();
-        String componentExecMethod = "extern void " + name + "_init();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
+        String componentExecMethod = "extern void " + name + "_odog_init();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
         
-        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_compute;\n";
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_finish;\n"; 
+        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_compute;\n";
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_odog_finish;\n"; 
 
         for(int i = 1;i < topologicalSort.length;i++) {
             id = topologicalSort[i].getISInfo().getId();
             
             //name = Node.replaceDotForUnd(topologicalSort[i].getComponent().getFullInstanceName());
             name = topologicalSort[i].getISInfo().getCGName();
-            componentExecMethod = componentExecMethod + "extern void " + name + "_init();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_init();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
             
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_finish;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_odog_finish;\n";
         }
         topgen.setArgumentValue("componentsExecMethods", componentExecMethod);
         topgen.setArgumentValue("initializeFptr", fptr);
@@ -289,12 +289,12 @@ public class DFCodeGenerator extends ISemGenerator {
     private void processSignals(Graph g, FileGenerator topgen, String loc, 
             Topology toplevel, String cgloc, String instanceName, 
             LinkedList<BoundaryData> outsideBinfo) {
-        Hashtable <ComponentGraphNode, Object> compToInPort = new Hashtable<ComponentGraphNode, Object>();
-        Hashtable <ComponentGraphNode, Object> compToOutPort = new Hashtable<ComponentGraphNode, Object>();
-        Hashtable <ComponentGraphNode, LinkedList<ComponentGraphNode>> inputComponents = 
-                new Hashtable<ComponentGraphNode, LinkedList<ComponentGraphNode>>();
-        Hashtable <ComponentGraphNode, LinkedList<ComponentGraphNode>> outputComponents = 
-                new Hashtable<ComponentGraphNode, LinkedList<ComponentGraphNode>>();
+        HashMap <ComponentGraphNode, Object> compToInPort = new HashMap<ComponentGraphNode, Object>();
+        HashMap <ComponentGraphNode, Object> compToOutPort = new HashMap<ComponentGraphNode, Object>();
+        HashMap <ComponentGraphNode, LinkedList<ComponentGraphNode>> inputComponents = 
+                new HashMap<ComponentGraphNode, LinkedList<ComponentGraphNode>>();
+        HashMap <ComponentGraphNode, LinkedList<ComponentGraphNode>> outputComponents = 
+                new HashMap<ComponentGraphNode, LinkedList<ComponentGraphNode>>();
 
         // 1. Declare all signals that have connections. This includes the 
         // dynamic fifo and a sample rate variable for the associated ports.
@@ -312,7 +312,7 @@ public class DFCodeGenerator extends ISemGenerator {
             outputComponents.put(node, outputcomponents);
 
             // PROCESS IN CONNECTIONS - also include the declaration of the dynamic fifos
-            Hashtable <VirtualPort, Object> portToConnection = new Hashtable <VirtualPort, Object>();
+            HashMap <VirtualPort, Object> portToConnection = new HashMap <VirtualPort, Object>();
             Iterator inite = node.getInEdges().iterator();
             while(inite.hasNext()) {
                 ComponentGraphEdge edge = (ComponentGraphEdge) inite.next();                               
@@ -345,9 +345,9 @@ public class DFCodeGenerator extends ISemGenerator {
             compToInPort.put(node, portToConnection);
             
             // PROCESS OUT CONNECTIONS
-            portToConnection = new Hashtable <VirtualPort, Object>();            
-            Hashtable <VirtualPort, LinkedList<VirtualPort>> outPortToInPort = 
-                    new Hashtable <VirtualPort, LinkedList<VirtualPort>>();
+            portToConnection = new HashMap <VirtualPort, Object>();            
+            HashMap <VirtualPort, LinkedList<VirtualPort>> outPortToInPort = 
+                    new HashMap <VirtualPort, LinkedList<VirtualPort>>();
             Iterator outite = node.getOutEdges().iterator();
             while(outite.hasNext()) {
                 ComponentGraphEdge edge = (ComponentGraphEdge) outite.next();
@@ -383,7 +383,7 @@ public class DFCodeGenerator extends ISemGenerator {
         String ninputComponentsText = "";
         String inputComponentsText = "";
         for(ComponentGraphNode node : compToInPort.keySet()) {
-            Hashtable<VirtualPort, Object> portToConnection = (Hashtable) compToInPort.get(node);
+            HashMap<VirtualPort, Object> portToConnection = (HashMap) compToInPort.get(node);
             int ninputs = portToConnection.keySet().size();
             ninputsText += "ninputs[" + node.getISInfo().getId() + "] = " + ninputs + ";\n";
             
@@ -443,7 +443,7 @@ public class DFCodeGenerator extends ISemGenerator {
         String noutputComponentsText = "";
         String outputComponentsText = "";
         for(ComponentGraphNode node : compToOutPort.keySet()) {
-            Hashtable<VirtualPort, Object> portToConnection = (Hashtable) compToOutPort.get(node);
+            HashMap<VirtualPort, Object> portToConnection = (HashMap) compToOutPort.get(node);
             int noutputs = portToConnection.keySet().size();
             
             int nodeId = node.getISInfo().getId();
@@ -509,7 +509,7 @@ public class DFCodeGenerator extends ISemGenerator {
     
     private void generateAtomicComponents(Topology container, String containerName, 
             Graph g, Hver topVersion, String outputDir, String designLocation, 
-            Hashtable <Attr,Value> attrValueMap, 
+            HashMap <Attr,Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
         
         Iterator ite = g.getVertices().iterator();

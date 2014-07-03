@@ -76,7 +76,7 @@ int i, j;
 void
 </text>
 <argument name="topologyName"/>
-<text><![CDATA[_init() {
+<text><![CDATA[_odog_init() {
     int i;
 
     ]]></text><argument name="topologyName"/><text><![CDATA[_zeroTimeEvents = 0;
@@ -101,7 +101,7 @@ void
 
 <!-- METHODO COMPUTE DA TOPOLOGIA -->
 <argument name="topologyName"/>
-<text><![CDATA[_compute() {
+<text><![CDATA[_odog_compute() {
 
 int iteration = 0, i, j, notReady;
 ]]></text>
@@ -167,7 +167,7 @@ void
 
 <!-- METHODO FINISH DA TOPOLOGIA -->
 <argument name="topologyName"/>
-<text><![CDATA[_finish() {
+<text><![CDATA[_odog_finish() {
 int i;
 
     for(i = 0;i < NCOMPONENTS;i++) {

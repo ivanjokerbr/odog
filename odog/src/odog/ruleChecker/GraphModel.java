@@ -8,7 +8,7 @@
 package odog.ruleChecker;
 
 import java.util.Collection;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import odog.syntax.Nodes.Acomp;
 import odog.syntax.Nodes.Node;
@@ -24,12 +24,12 @@ public class GraphModel {
 
     /** Creates a new instance of GraphModel */
     public GraphModel() {
-        nodeTypeTables = new Hashtable[TOTAL_TABLES];
+        nodeTypeTables = new HashMap[TOTAL_TABLES];
         for(int i = 0;i < TOTAL_TABLES;i++) {
-            nodeTypeTables[i] = new Hashtable();
+            nodeTypeTables[i] = new HashMap();
         }
-        hasEdgeTables = new Hashtable();
-        hasPathTables = new Hashtable();
+        hasEdgeTables = new HashMap();
+        hasPathTables = new HashMap();
     }
 
     ///////////////// PUBLIC METHODS ///////////////////////////////////////////
@@ -80,7 +80,7 @@ public class GraphModel {
     }
     
     public boolean hasEdge(Node from, Node to) throws InvalidNodeException {
-        Hashtable tab = (Hashtable) hasEdgeTables.get(from);
+        HashMap tab = (HashMap) hasEdgeTables.get(from);
         if(tab == null) {
             throw new InvalidNodeException("Node " + from + " invalid");           
         }
@@ -93,7 +93,7 @@ public class GraphModel {
         }        
         //System.out.println("No direct edge from " + from + " to " + to);        
         
-        Hashtable tab = (Hashtable) hasPathTables.get(from);
+        HashMap tab = (HashMap) hasPathTables.get(from);
         if(tab == null) {
             throw new InvalidNodeException("Node " + from + " invalid");
         }
@@ -102,7 +102,7 @@ public class GraphModel {
         }
 
         // percorre todos os nos conectados, vendo se ha caminho
-        Hashtable tab2 = (Hashtable) hasEdgeTables.get(from);
+        HashMap tab2 = (HashMap) hasEdgeTables.get(from);
         Iterator ite = tab2.keySet().iterator();
         while(ite.hasNext()) {
             Node n = (Node) ite.next();
@@ -128,7 +128,7 @@ public class GraphModel {
         if(nodeTypeTables[n.getType()].containsKey(n.getFullName())) return;
 
         nodeTypeTables[n.getType()].put(n.getFullName(), n);
-        Hashtable tab = new Hashtable();
+        HashMap tab = new HashMap();
 
         Iterator ite = n.getAllConnectedNodes();
         while(ite.hasNext()) {
@@ -175,7 +175,7 @@ public class GraphModel {
         }
 
         hasEdgeTables.put(n, tab);
-        hasPathTables.put(n, new Hashtable());
+        hasPathTables.put(n, new HashMap());
 
 /*
         if(n.getType() == Node.VALUE) {
@@ -194,16 +194,16 @@ public class GraphModel {
     ///////////////// PRIVATE VARIABLES/////////////////////////////////////////
 
     // Tabela de hash para cada um dos tipos de nos. Indexado por NodeType.type
-    private Hashtable [] nodeTypeTables;
+    private HashMap [] nodeTypeTables;
     private static final int TOTAL_TABLES = 16;
 
     // Uma tabela de hash contendo uma entrada para cada no do grafo. O valor associado
     // eh outra tabela de hash, indicando os nos a ele diretamente conectados.
-    private Hashtable hasEdgeTables;
+    private HashMap hasEdgeTables;
 
     // Uma table de hash contende uma entrada para cada no do grafo. O valor associado
     // eh outra tabela de hash, indicando os nos que tem caminho para o tal no.
-    private Hashtable hasPathTables;
+    private HashMap hasPathTables;
     
     private String dotGraph;
 }

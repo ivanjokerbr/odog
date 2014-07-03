@@ -8,7 +8,7 @@
 package odog.syntax.Nodes;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class Acomp extends CompBase implements CompInterface {
         ret.setTreeNode(tn);
 
         ret.buildAttributeTable();
-        Hashtable <String, Attr> retTable = ret.getAttributeTable();
+        HashMap <String, Attr> retTable = ret.getAttributeTable();
         
         ite = ret.versionsIterator();
         while(ite.hasNext()) {
@@ -245,7 +245,7 @@ public class Acomp extends CompBase implements CompInterface {
     // Coloca todos os atributos do ator em uma tabela indexada pela nome comleto dele.
     // O nome dos atributos nessa tabela nao eh o completo, eh a partir do ator
     private void buildAttributeTable() {
-        attributeTable = new Hashtable<String, Attr>();
+        attributeTable = new HashMap<String, Attr>();
         
         Iterator ite = attributesIterator();
         while(ite.hasNext()) {

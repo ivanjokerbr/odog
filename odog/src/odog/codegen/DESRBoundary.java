@@ -13,7 +13,7 @@ import odog.syntax.Nodes.Connection;
 import odog.syntax.Nodes.ExportedPort;
 import odog.syntax.Nodes.Topology;
 import odog.syntax.Nodes.Value;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  *
@@ -23,7 +23,7 @@ public class DESRBoundary extends BoundaryData {
     
     public DESRBoundary(String outsideSignal, ExportedPort port, Connection c,
             Topology containerTopology, BoundaryType boundaryType,
-            Hashtable<Attr, Value> attrValueMap) {
+            HashMap<Attr, Value> attrValueMap) {
         super(outsideSignal, port, c, containerTopology, BoundaryType.DESR, attrValueMap,
                 BoundaryDirection.INPUT);
     }

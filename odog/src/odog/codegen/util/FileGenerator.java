@@ -7,7 +7,7 @@
  */
 package odog.codegen.util;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -26,7 +26,7 @@ public class FileGenerator {
     /** Creates a new instance of TextFileGenerator */
     public FileGenerator() {
         elements = new LinkedList();
-        arguments = new Hashtable();
+        arguments = new HashMap();
     }
     
     ///////////////// PUBLIC METHODS ///////////////////////////////////////////
@@ -67,5 +67,5 @@ public class FileGenerator {
     // Os elementos que podem ser texto puro ou argumentos.
     private LinkedList elements;
 
-    private Hashtable arguments;
+    private HashMap arguments;
 }

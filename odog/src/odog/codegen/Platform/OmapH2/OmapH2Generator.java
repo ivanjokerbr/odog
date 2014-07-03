@@ -12,7 +12,7 @@ import odog.codegen.util.FileGeneratorParser;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import odog.codegen.BoundaryData;
@@ -79,7 +79,7 @@ public class OmapH2Generator extends CodeGenerator {
         }
 
         // 3. Get attribute value map
-        Hashtable<Attr,Value> attrValueMap = toplevel.buildValuesTable(ver);
+        HashMap<Attr,Value> attrValueMap = toplevel.buildValuesTable(ver);
 
         // 4. Builds the topology graph for all the specification
         TopologyGraph tgraph = new TopologyGraph();

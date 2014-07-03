@@ -14,7 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import odog.codegen.AtomicComponentGenerator;
@@ -42,7 +42,7 @@ import odog.syntax.Nodes.VirtualPort;
  */
 public class DFCodeGenerator extends ISemGenerator {
 
-    public DFCodeGenerator(Hashtable <Attr, Value> attrValueMap) {
+    public DFCodeGenerator(HashMap <Attr, Value> attrValueMap) {
         super(attrValueMap);
     }
 
@@ -166,7 +166,7 @@ public class DFCodeGenerator extends ISemGenerator {
     }
     
     protected void generateCommunicationMethods(ComponentGraphNode node, 
-            AtomicComponentGenerator gen, Hashtable <Attr, Value> attrValueMap,
+            AtomicComponentGenerator gen, HashMap <Attr, Value> attrValueMap,
             String containerName, LinkedList<BoundaryData> outsideBinfo) {
         String loc = System.getenv("ODOG_CODEGENERATORS");
         loc = BaseConfiguration.appendSlash(loc) + "OmapH2/DF/FileGenerators/";
@@ -213,7 +213,7 @@ public class DFCodeGenerator extends ISemGenerator {
                 "sendDynamicFifo.xml");
         FileGenerator sendLimitedFifoGenerator = FileGeneratorParser.parse(loc + 
                 "sendLimitedCapacityFifo.xml");
-        Hashtable<String, String> outConText = new Hashtable<String, String>();
+        HashMap<String, String> outConText = new HashMap<String, String>();
         ite = node.getOutEdges().iterator();
         while(ite.hasNext()) {
             ComponentGraphEdge edge = (ComponentGraphEdge) ite.next();
@@ -271,7 +271,7 @@ public class DFCodeGenerator extends ISemGenerator {
         FileGenerator canSendGenerator = FileGeneratorParser.parse(loc + 
                 "canSendLimitedFifo.xml");
         String canSendText = "";
-        outConText = new Hashtable<String, String>();
+        outConText = new HashMap<String, String>();
         ite = node.getOutEdges().iterator();
         while(ite.hasNext()) {
             ComponentGraphEdge edge = (ComponentGraphEdge) ite.next();
@@ -311,7 +311,7 @@ public class DFCodeGenerator extends ISemGenerator {
     
     private void generateARMTopology(String instanceName, Topology toplevel, 
             Hver topVersion, Graph g, String designLocation, String outputDir,
-            Hashtable <Attr, Value> attrValueMap, 
+            HashMap <Attr, Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {        
         String cgloc = System.getenv("ODOG_CODEGENERATORS");
         String loc = BaseConfiguration.appendSlash(cgloc) + "OmapH2/DF/FileGenerators/";
@@ -329,13 +329,13 @@ public class DFCodeGenerator extends ISemGenerator {
         int id = topologicalSort[0].getISInfo().getId();
         if(!toDSP[id]) {
             String name = Node.replaceDotForUnd(topologicalSort[0].getComponent().getFullInstanceName());
-            compExecMethod = "extern void " + name + "_init();\n";
-            compExecMethod = compExecMethod + "extern void " + name + "_compute();\n";
-            compExecMethod = compExecMethod + "extern void " + name + "_finish();\n";
+            compExecMethod = "extern void " + name + "_odog_init();\n";
+            compExecMethod = compExecMethod + "extern void " + name + "_odog_compute();\n";
+            compExecMethod = compExecMethod + "extern void " + name + "_odog_finish();\n";
 
-            fptr = instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][2] = " + name + "_finish;\n"; 
+            fptr = instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][2] = " + name + "_odog_finish;\n"; 
         }
 
         for(int i = 1;i < topologicalSort.length;i++) {
@@ -343,13 +343,13 @@ public class DFCodeGenerator extends ISemGenerator {
             if(toDSP[id]) continue;
             
             String name = Node.replaceDotForUnd(topologicalSort[i].getComponent().getFullInstanceName());
-            compExecMethod = compExecMethod + "extern void " + name + "_init();\n";
-            compExecMethod = compExecMethod + "extern void " + name + "_compute();\n";
-            compExecMethod = compExecMethod + "extern void " + name + "_finish();\n";
+            compExecMethod = compExecMethod + "extern void " + name + "_odog_init();\n";
+            compExecMethod = compExecMethod + "extern void " + name + "_odog_compute();\n";
+            compExecMethod = compExecMethod + "extern void " + name + "_odog_finish();\n";
             
-            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][2] = " + name + "_finish;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(armNodeId[id]) + "][2] = " + name + "_odog_finish;\n";
         }
         topgen.setArgumentValue("componentsExecMethods", compExecMethod);
         topgen.setArgumentValue("initializeFptr", fptr);
@@ -402,7 +402,7 @@ public class DFCodeGenerator extends ISemGenerator {
 
      private void generateDSPTopology(String instanceName, Topology toplevel, 
             Hver topVersion, Graph g, String designLocation, String outputDir,
-            Hashtable <Attr, Value> attrValueMap, 
+            HashMap <Attr, Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {        
         String cgloc = System.getenv("ODOG_CODEGENERATORS");
         String loc = BaseConfiguration.appendSlash(cgloc) + "OmapH2/DF/FileGenerators/";
@@ -422,12 +422,12 @@ public class DFCodeGenerator extends ISemGenerator {
         if(toDSP[id]) {
             String name = Node.replaceDotForUnd(topologicalSort[0].getComponent().getFullInstanceName());
             componentExecMethod = "extern void " + name + "_init();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
 
-            fptr = instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][2] = " + name + "_finish;\n"; 
+            fptr = instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][2] = " + name + "_odog_finish;\n"; 
         }
 
         for(int i = 1;i < topologicalSort.length;i++) {
@@ -435,13 +435,13 @@ public class DFCodeGenerator extends ISemGenerator {
             if(!toDSP[id]) continue;
             
             String name = Node.replaceDotForUnd(topologicalSort[i].getComponent().getFullInstanceName());
-            componentExecMethod = componentExecMethod + "extern void " + name + "_init();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_init();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
             
-            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][2] = " + name + "_finish;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(dspNodeId[id]) + "][2] = " + name + "_odog_finish;\n";
         }
         topgen.setArgumentValue("componentsExecMethods", componentExecMethod);
         topgen.setArgumentValue("initializeFptr", fptr);
@@ -973,7 +973,7 @@ public class DFCodeGenerator extends ISemGenerator {
     
     private void generateARMAtomicComponents(Topology container, String containerName, 
             Graph g, Hver topVersion, String outputDir, String designLocation, 
-            Hashtable <Attr,Value> attrValueMap, 
+            HashMap <Attr,Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {                
         
         for(int comp = 0;comp < topologicalSort.length;comp++) {
@@ -1047,7 +1047,7 @@ public class DFCodeGenerator extends ISemGenerator {
 
     private void generateDSPAtomicComponents(Topology container, String containerName, 
             Graph g, Hver topVersion, String outputDir, String designLocation, 
-            Hashtable <Attr,Value> attrValueMap, 
+            HashMap <Attr,Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
 
         for(int comp = 0;comp < topologicalSort.length;comp++) {

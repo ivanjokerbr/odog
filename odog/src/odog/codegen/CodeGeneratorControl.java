@@ -14,7 +14,7 @@ import odog.design.DesignRepository;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Set;
 import odog.design.CompositeComponent;
 import odog.syntax.Nodes.Topology;
@@ -137,7 +137,7 @@ public class CodeGeneratorControl {
     ///////////////////////////// PRIVATE METHODS //////////////////////////////
     
     private void processPlatforms(String cgfile) {
-        codeGenerators = new Hashtable<String, CodeGenerator>();
+        codeGenerators = new HashMap<String, CodeGenerator>();
         try {
             File f = new File(cgfile);
             if(!f.exists()) return;
@@ -204,5 +204,5 @@ public class CodeGeneratorControl {
     private String report;
     private BaseConfiguration configuration;
     private DesignRepository designRepository;
-    private Hashtable<String, CodeGenerator> codeGenerators;
+    private HashMap<String, CodeGenerator> codeGenerators;
 }

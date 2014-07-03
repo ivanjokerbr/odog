@@ -8,7 +8,8 @@
 package odog.syntax.Nodes;
 
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,10 +125,10 @@ public class Topology extends CompBase implements CompInterface {
             }
         }
 
-        Hashtable <Connection, Connection> connectionsMap = 
-                new Hashtable<Connection, Connection>();
-        Hashtable <ExportedPort, ExportedPort> exportedPortMap =
-                new Hashtable<ExportedPort, ExportedPort>();
+        HashMap <Connection, Connection> connectionsMap = 
+                new HashMap<Connection, Connection>();
+        HashMap <ExportedPort, ExportedPort> exportedPortMap =
+                new HashMap<ExportedPort, ExportedPort>();
         
         ite = versionsIterator();
         while(ite.hasNext()) {
@@ -178,7 +179,7 @@ public class Topology extends CompBase implements CompInterface {
     
     // A buildElementsTable must have been called before this method!!
     public void cloneAssociatedAttributes(Topology originalTopology, 
-            Hashtable<String, Attr> attributeTable) {
+            HashMap<String, Attr> attributeTable) {
         Iterator ite = componentInstancesIterator();
         while(ite.hasNext()) {
             CompInstance ins = (CompInstance) ite.next();
@@ -487,8 +488,8 @@ public class Topology extends CompBase implements CompInterface {
      * Default values are not processed. If one looks at the table and does not find the 
      * value for the attribute, the default value must be considered.
      */
-    public Hashtable<Attr, Value> buildValuesTable(VersionBase ver) {
-        valuesTable = new Hashtable<Attr, Value>();
+    public HashMap<Attr, Value> buildValuesTable(VersionBase ver) {
+        valuesTable = new HashMap<Attr, Value>();
 
         LinkedList<CompBase> process = new LinkedList<CompBase>();
         process.add(this);
@@ -564,7 +565,7 @@ public class Topology extends CompBase implements CompInterface {
     
     // Esse metodo necessita que os portos tenham sido resolvidos antes
     private void buildAttributeTable() {
-        attributeTable = new Hashtable<String, Attr>();
+        attributeTable = new HashMap<String, Attr>();
 
         Iterator ite = attributesIterator();
         while(ite.hasNext()) {
@@ -759,5 +760,5 @@ public class Topology extends CompBase implements CompInterface {
 
     private DefaultMutableTreeNode treeNode;
 
-    private Hashtable<Attr, Value> valuesTable;
+    private HashMap<Attr, Value> valuesTable;
 }

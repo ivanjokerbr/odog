@@ -27,7 +27,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -41,7 +41,7 @@ import java.util.LinkedList;
 public class DECodeGenerator extends ISemGenerator {
     
     /** Creates a new instance of DECodeGenerator */
-    public DECodeGenerator(Hashtable <Attr, Value> attrValueMap) {
+    public DECodeGenerator(HashMap <Attr, Value> attrValueMap) {
         super(attrValueMap);
     }
 
@@ -117,15 +117,15 @@ public class DECodeGenerator extends ISemGenerator {
         catch(Exception ex) {
             System.out.println("--> " + ex);
         }  
-        text = text.replaceAll("currentTime\\(\\)", "currentTime");
-        text = text.replaceAll("abortSchedule\\(\\)" , "abortSchedule(" + 
+        text = text.replaceAll("odog_currentTime\\(\\)", "currentTime");
+        text = text.replaceAll("odog_abortSchedule\\(\\)" , "odog_abortSchedule(" + 
                 String.valueOf(node.getISInfo().getId()));
         
         return text;
     }
     
     protected void generateCommunicationMethods(ComponentGraphNode node, 
-            AtomicComponentGenerator gen, Hashtable <Attr, Value> attrValueMap,
+            AtomicComponentGenerator gen, HashMap <Attr, Value> attrValueMap,
             String containerName, LinkedList<BoundaryData> outsideBinfo) {
         String loc = System.getenv("ODOG_CODEGENERATORS");
         loc = BaseConfiguration.appendSlash(loc) + "Host/DE/FileGenerators/";      
@@ -263,13 +263,13 @@ public class DECodeGenerator extends ISemGenerator {
 
         //String name = Node.replaceDotForUnd(topologicalSort[0].getComponent().getFullInstanceName());
         String name = topologicalSort[0].getISInfo().getCGName();
-        String componentExecMethod = "extern void " + name + "_init();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
+        String componentExecMethod = "extern void " + name + "_odog_init();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
         
-        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_compute;\n";
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_finish;\n"; 
+        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_compute;\n";
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_odog_finish;\n"; 
 
         for(int i = 1;i < topologicalSort.length;i++) {
             id = topologicalSort[i].getISInfo().getId();
@@ -277,13 +277,13 @@ public class DECodeGenerator extends ISemGenerator {
             
             //name = Node.replaceDotForUnd(topologicalSort[i].getComponent().getFullInstanceName());
             name = topologicalSort[i].getISInfo().getCGName();
-            componentExecMethod = componentExecMethod + "extern void " + name + "_init();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_init();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
             
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_finish;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_odog_finish;\n";
         }
         topgen.setArgumentValue("topologicalOrder", topOrder);
         topgen.setArgumentValue("componentsExecMethods", componentExecMethod);
@@ -345,7 +345,7 @@ public class DECodeGenerator extends ISemGenerator {
 
     private void generateAtomicComponents(String containerName, Graph g,
             String outputDir, String designLocation, 
-            Hashtable <Attr, Value> attrValueMap,
+            HashMap <Attr, Value> attrValueMap,
             LinkedList<BoundaryData> outsideBinfo) {
         
         Iterator ite = g.getVertices().iterator();
@@ -399,8 +399,7 @@ public class DECodeGenerator extends ISemGenerator {
 
         gen.setScheduleMe(scheduleMe.toString());
     }
-        
+
     /////////////////////////// PRIVATE VARIABLES //////////////////////////////
-    
-    
+
 }

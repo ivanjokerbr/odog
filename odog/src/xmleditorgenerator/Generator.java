@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 /**
@@ -60,7 +61,7 @@ public class Generator {
                     "dataWarperGenerator.xml");
 
             // 3. Gera os arquivos recursivamente            
-            processed = new Hashtable<String, Object>();
+            processed = new HashMap<String, Object>();
             
             Enumeration roots = parser.getDocType().getRootElements();            
 	    if(roots != null) {
@@ -290,7 +291,7 @@ public class Generator {
     private Hashtable ElementList;
     private Hashtable AttributeList;
 
-    private Hashtable<String, Object> processed;
+    private HashMap<String, Object> processed;
     
     private FileGenerator panelGenerator;
     private FileGenerator dataWarperGenerator;    

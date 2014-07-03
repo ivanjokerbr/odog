@@ -34,7 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +46,7 @@ import java.util.List;
 public class SRCodeGenerator extends ISemGenerator {
 
     /** Creates a new instance of SRCodeGenerator */
-    public SRCodeGenerator(Hashtable <Attr, Value> attrValueMap) {
+    public SRCodeGenerator(HashMap <Attr, Value> attrValueMap) {
         super(attrValueMap);
     }
     
@@ -137,7 +137,7 @@ public class SRCodeGenerator extends ISemGenerator {
     }
     
     protected void generateCommunicationMethods(ComponentGraphNode node, 
-            AtomicComponentGenerator gen, Hashtable <Attr, Value> attrValueMap,
+            AtomicComponentGenerator gen, HashMap <Attr, Value> attrValueMap,
             String containerName, LinkedList<BoundaryData> outsideBinfo) {
         String loc = System.getenv("ODOG_CODEGENERATORS");
         loc = BaseConfiguration.appendSlash(loc) + "Host/SR/FileGenerators/";
@@ -242,7 +242,7 @@ public class SRCodeGenerator extends ISemGenerator {
     
     private void generateTopology(String instanceName, Topology toplevel, 
             Hver topVersion, Graph g, String designLocation, String outputDir,
-            Hashtable <Attr, Value> attrValueMap, 
+            HashMap <Attr, Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
         String cgloc = System.getenv("ODOG_CODEGENERATORS");
         String loc = BaseConfiguration.appendSlash(cgloc) + "Host/SR/FileGenerators/";
@@ -267,15 +267,15 @@ public class SRCodeGenerator extends ISemGenerator {
 
         //String name = Node.replaceDotForUnd(topologicalSort[0].getComponent().getFullInstanceName());
         String name = topologicalSort[0].getISInfo().getCGName();
-        String componentExecMethod = "extern void " + name + "_init();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
-        componentExecMethod = componentExecMethod + "extern void " + name + "_fixpoint();\n";
+        String componentExecMethod = "extern void " + name + "_odog_init();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
+        componentExecMethod = componentExecMethod + "extern void " + name + "_odog_fixpoint();\n";
         
-        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_compute;\n";
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_finish;\n"; 
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][3] = " + name + "_fixpoint;\n"; 
+        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_compute;\n";
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_odog_finish;\n"; 
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][3] = " + name + "_odog_fixpoint;\n"; 
 
         for(int i = 1;i < topologicalSort.length;i++) {
             id = topologicalSort[i].getISInfo().getId();
@@ -283,15 +283,15 @@ public class SRCodeGenerator extends ISemGenerator {
             
             //name = Node.replaceDotForUnd(topologicalSort[i].getComponent().getFullInstanceName());
             name = topologicalSort[i].getISInfo().getCGName();
-            componentExecMethod = componentExecMethod + "extern void " + name + "_init();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_compute();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_finish();\n";
-            componentExecMethod = componentExecMethod + "extern void " + name + "_fixpoint();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_init();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_compute();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_finish();\n";
+            componentExecMethod = componentExecMethod + "extern void " + name + "_odog_fixpoint();\n";
             
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_compute;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_finish;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][3] = " + name + "_fixpoint;\n"; 
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_compute;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][2] = " + name + "_odog_finish;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][3] = " + name + "_odog_fixpoint;\n"; 
 
             if(isStrict(topologicalSort[id])) {
                 strictComponent = strictComponent + ", 1";
@@ -360,8 +360,8 @@ public class SRCodeGenerator extends ISemGenerator {
             LinkedList<BoundaryData> outsideBinfo) {
         int maxqueues = 0;
         String setQueues = "";
-        Hashtable<ComponentGraphNode, Integer> compconIndex = 
-                new Hashtable<ComponentGraphNode, Integer>();
+        HashMap<ComponentGraphNode, Integer> compconIndex = 
+                new HashMap<ComponentGraphNode, Integer>();
 
         // 1. Declare all signals (value/status pair)        
         String signalDecl = "";
@@ -404,12 +404,12 @@ public class SRCodeGenerator extends ISemGenerator {
         }
 
         // PROCESS THE BOUNDARY SIGNALS
-        Hashtable <String, LinkedList<String>> srdeSignals = 
-                new Hashtable<String, LinkedList<String>>();
-        Hashtable <String, String> srdeSignalType = new Hashtable<String, String>();
+        HashMap <String, LinkedList<String>> srdeSignals = 
+                new HashMap<String, LinkedList<String>>();
+        HashMap <String, String> srdeSignalType = new HashMap<String, String>();
         
         // necessary for establishing the number of connections of each inside port
-        Hashtable <Dport, Integer> desrSignals = new Hashtable<Dport, Integer>();
+        HashMap <Dport, Integer> desrSignals = new HashMap<Dport, Integer>();
         String fromOutsideData = "";
         String toOutsideData = "";
         String testOutputBoundarySignals = "";
@@ -627,7 +627,7 @@ public class SRCodeGenerator extends ISemGenerator {
     
     private void generateAtomicComponents(Topology container, String containerName, 
             Graph g, Hver topVersion, String outputDir, String designLocation, 
-            Hashtable <Attr,Value> attrValueMap, 
+            HashMap <Attr,Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
         
         Iterator ite = g.getVertices().iterator();

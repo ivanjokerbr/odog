@@ -7,7 +7,7 @@
  */
 package odog.editor.services;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -18,7 +18,7 @@ public class Services {
     
     /** Creates a new instance of Services */
     public Services() {
-        services = new Hashtable<String, Service>();
+        services = new HashMap<String, Service>();
     }
     
     ////////////////////////////// PUBLIC METHODS //////////////////////////////
@@ -60,5 +60,5 @@ public class Services {
     
     ////////////////////////////// PRIVATE VARIABLES  //////////////////////////
     
-    public Hashtable<String, Service> services;    
+    public HashMap<String, Service> services;    
 }

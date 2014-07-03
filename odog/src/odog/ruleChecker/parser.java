@@ -250,7 +250,7 @@ public class parser extends java_cup.runtime.lr_parser {
 
 
 
-   public Hashtable<String,Function> getFunctionDefs() {
+   public HashMap<String,Function> getFunctionDefs() {
        return action_obj.functionDefs;
    }
 
@@ -267,7 +267,7 @@ class CUP$parser$actions {
  * This software is open-source under GNU General Public License, version 2 
  * see LICENSE file
  */
-       public Hashtable<String, Function> functionDefs = new Hashtable<String, Function>();
+       public HashMap<String, Function> functionDefs = new HashMap<String, Function>();
 
   private final parser parser;
 

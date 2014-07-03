@@ -97,7 +97,7 @@ void
 </text>
 
 <argument name="topologyName"/>
-<text><![CDATA[_init() {
+<text><![CDATA[_odog_init() {
 int i;
 void *sharedMem;
 char *devfn = "/dev/dsptask/dsptask0";
@@ -176,7 +176,7 @@ char *devfn = "/dev/dsptask/dsptask0";
 </text>
 
 <argument name="topologyName"/>
-<text><![CDATA[_compute() {
+<text><![CDATA[_odog_compute() {
     int i, id;
 
 #ifdef DEBUG
@@ -300,7 +300,7 @@ void
 
 <argument name="topologyName"/>
 
-<text><![CDATA[_finish() {
+<text><![CDATA[_odog_finish() {
 int i, j;
 
 #ifdef DEBUG

@@ -28,7 +28,7 @@ import edu.uci.ics.jung.graph.Vertex;
 import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 import edu.uci.ics.jung.graph.impl.DirectedSparseGraph;
 import edu.uci.ics.jung.graph.impl.SparseGraph;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,15 +42,15 @@ public class TopologyGraph {
     
     public TopologyGraph() {
     }
-    
+
     ////////////////////////////// PUBLIC METHODS //////////////////////////////
     
     /* generates a graph view of the topology */
     public Graph generateViewGraph(Topology topology, Hver version) {
         DirectedSparseGraph graph = new DirectedSparseGraph();
 
-        Hashtable <VirtualPort, Vertex> vpTable = new 
-                Hashtable <VirtualPort, Vertex>();
+        HashMap <VirtualPort, Vertex> vpTable = new HashMap <>();
+                //HashMap <VirtualPort, Vertex>();
         
         // 1. add the nodes from the topology. The virtual ports of the component
         // are put on a hash table. This table is used when connecting the ports
@@ -174,7 +174,7 @@ public class TopologyGraph {
      * explorados. 
      */
     public CompositeComponentGraphNode generateISemGraph(CompositeComponent comp, 
-            Hver version, Hashtable <Attr, Value> attrValueMap)  {
+            Hver version, HashMap <Attr, Value> attrValueMap)  {
         Topology toplevel = comp.getRootNode();
 
         compIndex = 0;
@@ -203,10 +203,10 @@ public class TopologyGraph {
     ///////////////////////////// PRIVATE METHODS //////////////////////////////
 
     private Graph generateGraph(Topology top, Hver version, String isemname,
-            Hashtable <Attr, Value> attrValueMap) {
+            HashMap <Attr, Value> attrValueMap) {
         Graph graph = new SparseGraph();
-        Hashtable <CompInstance, ComponentGraphNode> nodeTable = new 
-                Hashtable <CompInstance, ComponentGraphNode>();
+        HashMap <CompInstance, ComponentGraphNode> nodeTable = new 
+                HashMap <CompInstance, ComponentGraphNode>();
 
         addNodes(top, version, nodeTable, graph, isemname, attrValueMap);
         addEdges(top, version, nodeTable, graph, attrValueMap);
@@ -215,8 +215,8 @@ public class TopologyGraph {
     }
 
     private void addEdges(Topology top, Hver ver, 
-            Hashtable<CompInstance, ComponentGraphNode> table, Graph graph,
-            Hashtable<Attr, Value> attrValueMap) {
+            HashMap<CompInstance, ComponentGraphNode> table, Graph graph,
+            HashMap<Attr, Value> attrValueMap) {
 
          // 1. procura em todas as conexoes da topologia em questao
          Iterator ite = top.connectionsIterator();
@@ -349,7 +349,7 @@ public class TopologyGraph {
     // destination instance. In the case of an atomic component, will the a dport. In
     // the case of a composite component with diferent isem, the exported port.
     private List<CompInstance> getOwner(VirtualPort vp, 
-            Hashtable<CompInstance, ComponentGraphNode> table, Vector realNode)  {
+            HashMap<CompInstance, ComponentGraphNode> table, Vector realNode)  {
         
         if(vp instanceof Dport) {
             Node owner = vp.getContainer();
@@ -377,13 +377,13 @@ public class TopologyGraph {
             if(anode != null) {   // eh um ator COMPOSITE com ISEM diferente
                 realNode.add(vp);
 
-                LinkedList<CompInstance> ret = new LinkedList<CompInstance>();
+                LinkedList<CompInstance> ret = new LinkedList<>();
                 ret.add(ains);
 
                 return ret;
             }       
 
-            LinkedList<CompInstance> ret = new LinkedList<CompInstance>();
+            LinkedList<CompInstance> ret = new LinkedList<>();
             for(int i = 0;i < ep.getRefPorts().size();i++) {
                 List instances = getOwner(ep.getRefPorts().get(i), table, realNode);
                 ret.addAll(instances);
@@ -394,8 +394,8 @@ public class TopologyGraph {
     }
 
     private void addNodes(Topology top, Hver ver, 
-            Hashtable<CompInstance, ComponentGraphNode> table, Graph graph, 
-            String isemname, Hashtable <Attr, Value> attrValueMap) {
+            HashMap<CompInstance, ComponentGraphNode> table, Graph graph, 
+            String isemname, HashMap <Attr, Value> attrValueMap) {
 
         Iterator ite = top.componentInstancesIterator();
         while(ite.hasNext()) {
@@ -413,8 +413,8 @@ public class TopologyGraph {
     }
     
     private void addNodesProcessComponentInstance(CompInstance ains, Topology top, Hver ver, 
-            Hashtable<CompInstance, ComponentGraphNode> table, Graph graph, 
-            String isemname, Hashtable <Attr, Value> attrValueMap) {
+            HashMap<CompInstance, ComponentGraphNode> table, Graph graph, 
+            String isemname, HashMap <Attr, Value> attrValueMap) {
 
         CompBase comp = ains.getComponent();
         if(comp instanceof Acomp) {

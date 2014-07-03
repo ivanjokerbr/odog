@@ -64,7 +64,7 @@ void
 </text>
 <argument name="topologyName"/>
 
-<text><![CDATA[_scheduleMe(int componentId, double time) 
+<text><![CDATA[_odog_scheduleMe(int componentId, double time) 
 {
     selfSchedule[componentId] = time;
 }
@@ -79,7 +79,7 @@ void
 
 <argument name="topologyName"/>
 
-<text><![CDATA[_init() {
+<text><![CDATA[_odog_init() {
 
 int i;
 
@@ -106,7 +106,7 @@ void
 
 <argument name="topologyName"/>
 
-<text><![CDATA[_compute() {
+<text><![CDATA[_odog_compute() {
 
 int i,j;
 double tmp = DBL_MAX, tmp2;
@@ -207,7 +207,7 @@ void
 
 <argument name="topologyName"/>
 
-<text><![CDATA[_finish() {
+<text><![CDATA[_odog_finish() {
 int i;
 
     for(i = 0;i < NCOMPONENTS;i++) {

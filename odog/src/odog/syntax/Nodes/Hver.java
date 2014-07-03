@@ -7,7 +7,7 @@
  */
 package odog.syntax.Nodes;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,8 +32,8 @@ public class Hver extends VersionBase {
         return name;
     }
 
-    public Hver clone(Topology parent, Hashtable<Connection, Connection> connectionsMap,
-            Hashtable<ExportedPort, ExportedPort> exportedPortMap) {
+    public Hver clone(Topology parent, HashMap<Connection, Connection> connectionsMap,
+            HashMap<ExportedPort, ExportedPort> exportedPortMap) {
         Hver ret = new Hver(name);
 
         // 1. clona as instancias de componentes

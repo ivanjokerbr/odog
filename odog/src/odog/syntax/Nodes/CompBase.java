@@ -7,7 +7,7 @@
  */
 package odog.syntax.Nodes;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -134,7 +134,7 @@ public abstract class CompBase extends Node implements Attributable, Instanciabl
         }
     }
     
-    public Hashtable<String, Attr> getAttributeTable() {
+    public HashMap<String, Attr> getAttributeTable() {
         return attributeTable;
     }
     
@@ -157,5 +157,5 @@ public abstract class CompBase extends Node implements Attributable, Instanciabl
     protected CompInstance compInstance;
 
     // Nome Completo a partir do Acomp -> Att
-    protected Hashtable<String, Attr> attributeTable;
+    protected HashMap<String, Attr> attributeTable;
 }

@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -54,13 +54,13 @@ public class LibraryViewerFrame extends javax.swing.JDialog implements
         initComponents();
 
         setModal(true);
-        urlDesignMap = new Hashtable<String, Design>();
+        urlDesignMap = new HashMap<String, Design>();
         ok = false;
 
         artifactTree.setCellRenderer(new ProjectTreeRenderer());
         this.configuration = configuration;
 
-        displayingTreeMap = new Hashtable<Design,DefaultMutableTreeNode>();
+        displayingTreeMap = new HashMap<Design,DefaultMutableTreeNode>();
 
         DefaultMutableTreeNode root = (DefaultMutableTreeNode) artifactTree.getModel().getRoot();
         for(Design lib : environmentLibs) {
@@ -478,8 +478,8 @@ public class LibraryViewerFrame extends javax.swing.JDialog implements
     // End of variables declaration//GEN-END:variables
 
     private BaseConfiguration configuration;
-    private Hashtable<String, Design> urlDesignMap;
-    private Hashtable<Design, DefaultMutableTreeNode> displayingTreeMap;
+    private HashMap<String, Design> urlDesignMap;
+    private HashMap<Design, DefaultMutableTreeNode> displayingTreeMap;
     private DesignRepository designRepository;    
     private DefaultTreeSelectionModel treeSelectionModel;
 

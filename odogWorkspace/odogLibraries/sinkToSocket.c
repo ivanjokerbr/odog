@@ -4,7 +4,7 @@ extern void connectTcp();
 int pid;
 
 void 
-init() {
+odog_init() {
  
     initTcp(socketPort);
 
@@ -18,15 +18,15 @@ init() {
 }
 
 void 
-compute() {
+odog_compute() {
 double *data;
     int i;
     size_t len;
 
-    int size = numberOfConnections("input");
+    int size = odog_numberOfConnections("input");
     for(i = 0;i < size;i++) {
-        while(canReceive(nameOfConnection("input", i), 1)) {
-            receive(nameOfConnection("input", i), &data, &len);
+        while(odog_canReceive(odog_nameOfConnection("input", i), 1)) {
+            odog_receive(odog_nameOfConnection("input", i), &data, &len);
             transferTcp(data);
             free(data);
         }
@@ -34,6 +34,6 @@ double *data;
 }
 
 void 
-finish() {
+odog_finish() {
 
 }

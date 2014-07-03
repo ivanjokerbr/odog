@@ -15,7 +15,7 @@ import odog.syntax.Nodes.ExportedPort;
 import odog.syntax.Nodes.Topology;
 import odog.syntax.Nodes.Value;
 import odog.syntax.Nodes.VirtualPort;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class BoundaryData {
     
     public BoundaryData(String outsideSignal, ExportedPort port, Connection c,
             Topology containerTopology, BoundaryType boundaryType,
-            Hashtable<Attr, Value> attrValueMap, BoundaryDirection direction) {
+            HashMap<Attr, Value> attrValueMap, BoundaryDirection direction) {
         
         this.outsideSignal = outsideSignal;
         this.port = port;
@@ -36,7 +36,7 @@ public class BoundaryData {
         this.boundaryType = boundaryType;
         this.direction = direction;
 
-        internalSignals = new Hashtable<Topology, LinkedList<Dport>>();
+        internalSignals = new HashMap<Topology, LinkedList<Dport>>();
         
         VirtualPort vp = con.getOutputPort();
         Attr dtype = vp.getDataType();
@@ -127,7 +127,7 @@ public class BoundaryData {
     
     private BoundaryType boundaryType;
     
-    private Hashtable <Topology, LinkedList<Dport>> internalSignals;
+    private HashMap <Topology, LinkedList<Dport>> internalSignals;
     
     private String dataType;
 

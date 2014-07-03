@@ -2,6 +2,6 @@
 <!DOCTYPE fileGenerator PUBLIC "-//ODOGFILEGENERATOR//DTD//EN" "">
 <fileGenerator>
 
-<text>abortSchedule(</text><argument name="componentID"><text>)</text>
+<text>odog_abortSchedule(</text><argument name="componentID"><text>)</text>
 
 </fileGenerator>

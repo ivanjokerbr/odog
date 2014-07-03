@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,7 +40,7 @@ import odog.syntax.Nodes.VirtualPort;
  */
 public class MulticoreDFCodeGenerator extends ISemGenerator {
 
-    public MulticoreDFCodeGenerator(Hashtable <Attr, Value> attrValueMap) {
+    public MulticoreDFCodeGenerator(HashMap <Attr, Value> attrValueMap) {
         super(attrValueMap);
     }
     
@@ -135,13 +135,13 @@ public class MulticoreDFCodeGenerator extends ISemGenerator {
 
 
     protected void generateCommunicationMethods(ComponentGraphNode node, 
-            AtomicComponentGenerator gen, Hashtable <Attr, Value> attrValueMap,
+            AtomicComponentGenerator gen, HashMap <Attr, Value> attrValueMap,
             String containerName, LinkedList<BoundaryData> outsideBinfo) {
         String loc = System.getenv("ODOG_CODEGENERATORS");
         loc = BaseConfiguration.appendSlash(loc) + "Multicore/DF/FileGenerators/";
         
         // verificar a implementacao desse port queue 
-        Hashtable <String, String> portQueueTable = new Hashtable<String, String>();
+        HashMap <String, String> portQueueTable = new HashMap<String, String>();
       
         // Communication methods on input ports
         Iterator ite = inportsQueue.keySet().iterator();
@@ -217,7 +217,7 @@ public class MulticoreDFCodeGenerator extends ISemGenerator {
     
     private void generateTopology(String instanceName, Topology toplevel, 
             Hver topVersion, Graph g, String designLocation, String outputDir,
-            Hashtable <Attr, Value> attrValueMap, 
+            HashMap <Attr, Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {        
         String cgloc = System.getenv("ODOG_CODEGENERATORS");
         String loc = BaseConfiguration.appendSlash(cgloc) + "Multicore/DF/FileGenerators/";
@@ -232,32 +232,32 @@ public class MulticoreDFCodeGenerator extends ISemGenerator {
         int id = topologicalSort[0].getISInfo().getId();
 
         String name = topologicalSort[0].getISInfo().getCGName();
-        String componentExecMethod = "extern void " + name + "_init();\n";        
-        componentExecMethod += "extern void " + name + "_finish();\n";
-        componentExecMethod += "extern void * " + name + "_compute_wraper(void *);\n";
+        String componentExecMethod = "extern void " + name + "_odog_init();\n";        
+        componentExecMethod += "extern void " + name + "_odog_finish();\n";
+        componentExecMethod += "extern void * " + name + "_odog_compute_wraper(void *);\n";
 
-        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";        
-        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_finish;\n"; 
+        String fptr = instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";        
+        fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_finish;\n"; 
         fptr += instanceName + "thread_ids[0] = 0;\n";
         
         String createThreadText = "\tpthread_create(&" + instanceName + "components[0], " +
-                "&" + instanceName + "attr, " + name + "_compute_wraper, (void *)&" + instanceName +
+                "&" + instanceName + "attr, " + name + "_odog_compute_wraper, (void *)&" + instanceName +
                 "thread_ids[0]);\n";        
         
         for(int i = 1;i < topologicalSort.length;i++) {
             id = topologicalSort[i].getISInfo().getId();
             
             name = topologicalSort[i].getISInfo().getCGName();
-            componentExecMethod += "extern void " + name + "_init();\n";            
-            componentExecMethod += "extern void " + name + "_finish();\n";
-            componentExecMethod += "extern void * " + name + "_compute_wraper(void *);\n";
+            componentExecMethod += "extern void " + name + "_odog_init();\n";            
+            componentExecMethod += "extern void " + name + "_odog_finish();\n";
+            componentExecMethod += "extern void * " + name + "_odog_compute_wraper(void *);\n";
 
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_init;\n";
-            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_finish;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][0] = " + name + "_odog_init;\n";
+            fptr += instanceName + "_fptr[" + String.valueOf(id) + "][1] = " + name + "_odog_finish;\n";
             fptr += instanceName + "thread_ids[" + i + "] = " + i + ";\n";
 
             createThreadText += "\tpthread_create(&" + instanceName + "components[" + i + 
-                    "], &" + instanceName + "attr, " + name + "_compute_wraper, (void *)&" +
+                    "], &" + instanceName + "attr, " + name + "_odog_compute_wraper, (void *)&" +
                     instanceName + "thread_ids[" + i + "]);\n";            
         }
         topgen.setArgumentValue("componentsExecMethods", componentExecMethod);
@@ -312,7 +312,7 @@ public class MulticoreDFCodeGenerator extends ISemGenerator {
 
     private void generateAtomicComponents(Topology container, String containerName, 
             Graph g, Hver topVersion, String outputDir, String designLocation, 
-            Hashtable <Attr,Value> attrValueMap, 
+            HashMap <Attr,Value> attrValueMap, 
             LinkedList<BoundaryData> outsideBinfo) {
         
         Iterator ite = g.getVertices().iterator();
@@ -355,7 +355,7 @@ public class MulticoreDFCodeGenerator extends ISemGenerator {
                     }
                 }
             }
-            
+
             signals += "extern pthread_mutex_t " + containerName + "_stopMutex;\n";
             signals += "extern pthread_cond_t "  + containerName + "_stopCond;\n";
             
@@ -433,7 +433,7 @@ public class MulticoreDFCodeGenerator extends ISemGenerator {
         stopExecText += "pthread_mutex_unlock(&" + containerName + "_stopMutex);\n";
         gen.setStopExecution(stopExecText);
     }
-    
+
     /////////////////////////// PRIVATE VARIABLES //////////////////////////////
     
 }

@@ -68,7 +68,7 @@ void
 </text>
 
 <argument name="topologyName"/>
-<text><![CDATA[_init() {
+<text><![CDATA[_odog_init() {
 int i;
 
     odog_timer_start(&]]></text><argument name="topologyName"/><text><![CDATA[_timer);
@@ -101,7 +101,7 @@ int i;
 </text>
 
 <argument name="topologyName"/>
-<text><![CDATA[_compute() {
+<text><![CDATA[_odog_compute() {
     int i, id;
     char deferred;
 
@@ -183,7 +183,7 @@ void
 
 <argument name="topologyName"/>
 
-<text><![CDATA[_finish() {
+<text><![CDATA[_odog_finish() {
 int i, j;
 
     for(i = 0;i < NCOMPONENTS;i++) {

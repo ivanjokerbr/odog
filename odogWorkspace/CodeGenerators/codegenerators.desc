@@ -1,4 +1,3 @@
-OmapH2 odog.codegen.Platform.OmapH2.OmapH2Generator
 Multicore odog.codegen.Platform.Multicore.MulticoreGenerator
 Host odog.codegen.Platform.Host.HostGenerator
 

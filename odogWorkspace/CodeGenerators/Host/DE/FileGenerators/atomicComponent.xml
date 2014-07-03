@@ -15,14 +15,14 @@
 <text>extern int DE_zeroTimeEvents;
 
 static int
-numberOfConnections(char *port) {
+odog_numberOfConnections(char *port) {
 </text>
 
 <argument name="numberOfConnectionsBody"/>
 <text>} 
 
 static char *
-nameOfConnection(char *port, int number) {
+odog_nameOfConnection(char *port, int number) {
 </text>
 <argument name="nameOfConnectionBody"/>
 <text>
@@ -35,7 +35,7 @@ extern calendarQueue_t *globalQueue;
 static int *prio;
 
 static void
-receive(char *p1, void **p2, size_t *p3) {
+odog_receive(char *p1, void **p2, size_t *p3) {
 odog_data_pkg *vec;
 </text>
 <argument name="receiveBody"/>
@@ -43,7 +43,7 @@ odog_data_pkg *vec;
 }
 
 static void
-send(char *p1, void *p2, size_t length) {
+odog_send(char *p1, void *p2, size_t length) {
 odog_data_pkg *p;
 </text>
 <argument name="sendBody"/>
@@ -51,19 +51,19 @@ odog_data_pkg *p;
 }
 
 static void
-sendAll(char *p1, void *p2, size_t length) {
+odog_sendAll(char *p1, void *p2, size_t length) {
 int n, i;
 char *qname;
 
-  n = numberOfConnections(p1);
+  n = odog_numberOfConnections(p1);
   for(i = 0;i < n;i++) {
-      qname = nameOfConnection(p1, i);
-      send(qname, p2, length);
+      qname = odog_nameOfConnection(p1, i);
+      odog_send(qname, p2, length);
   }
 }
 
 static void
-sendDelayed(char *p1, void *p2, size_t length, double p3) {
+odog_sendDelayed(char *p1, void *p2, size_t length, double p3) {
   odog_data_pkg *p;
 ]]></text>
 <argument name="sendDelayedBody"/>
@@ -71,19 +71,19 @@ sendDelayed(char *p1, void *p2, size_t length, double p3) {
 }
 
 static void
-sendAllDelayed(char *p1, void *p2, size_t length, double p3) {
+odog_sendAllDelayed(char *p1, void *p2, size_t length, double p3) {
 int n, i;
 char *qname;
 
-  n = numberOfConnections(p1);
+  n = odog_numberOfConnections(p1);
   for(i = 0;i < n;i++) {
-      qname = nameOfConnection(p1, i);
-      sendDelayed(qname, p2, length, p3);
+      qname = odog_nameOfConnection(p1, i);
+      odog_sendDelayed(qname, p2, length, p3);
   }
 }
 
 static char
-canReceive(char *p1, int p2) {
+odog_canReceive(char *p1, int p2) {
 ]]></text>
 <argument name="canReceiveBody"/>
 <text><![CDATA[
@@ -91,36 +91,36 @@ canReceive(char *p1, int p2) {
 }
 
 static char
-canReceiveAll(char *p1, int p2) {
+odog_canReceiveAll(char *p1, int p2) {
 int n, i;
 char *qname;
 
-    n = numberOfConnections(p1);
+    n = odog_numberOfConnections(p1);
     for(i = 0;i < n;i++) {
-        qname = nameOfConnection(p1, i);
-        if(canReceive(qname, p2) == 0) return 0;
+        qname = odog_nameOfConnection(p1, i);
+        if(odog_canReceive(qname, p2) == 0) return 0;
     }
 
     return 1;
 }
 
 static char
-canSend(char *p1, int p2) {
+odog_canSend(char *p1, int p2) {
     return 1;
 }
 
 static char
-canSendAll(char *p1, int p2) {
+odog_canSendAll(char *p1, int p2) {
     return 1;
 }
 
 extern void ]]></text>
 
 <argument name="containerName"/>
-<text>_scheduleMe(int, double);
+<text>_odog_scheduleMe(int, double);
 
 static void
-scheduleMe(double p1) {
+odog_scheduleMe(double p1) {
 </text>
 <argument name="scheduleMeBody"/>
 <text>

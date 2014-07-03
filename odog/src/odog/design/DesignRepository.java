@@ -8,7 +8,7 @@
 package odog.design;
 
 import odog.configuration.BaseConfiguration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.StringTokenizer;
 
@@ -34,7 +34,7 @@ public class DesignRepository {
 
     public DesignRepository(BaseConfiguration configuration) {
         designs = new LinkedList<Design>();
-        designsFullPath = new Hashtable<String,Design>();
+        designsFullPath = new HashMap<String,Design>();
 
         this.configuration = configuration;
         extraDirs = new LinkedList<String>();
@@ -140,7 +140,7 @@ public class DesignRepository {
     private LinkedList<Design> designs;
 
     // associates each design with its fullPath
-    private Hashtable <String, Design> designsFullPath;
+    private HashMap <String, Design> designsFullPath;
 
     private LinkedList<String> extraDirs;
     

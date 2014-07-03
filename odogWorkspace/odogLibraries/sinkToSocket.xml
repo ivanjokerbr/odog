@@ -17,11 +17,11 @@
     <attrClassification visible="true" hasData="true" static="true"/>
   </attribute>
   <version name="v1">
-    <method name="init" language="C" codeURL="sinkToSocket.c">
+    <method name="odog_init" language="C" codeURL="sinkToSocket.c">
     </method>
-    <method name="compute" language="C" codeURL="sinkToSocket.c">
+    <method name="odog_compute" language="C" codeURL="sinkToSocket.c">
     </method>
-    <method name="finish" language="C" codeURL="sinkToSocket.c">
+    <method name="odog_finish" language="C" codeURL="sinkToSocket.c">
     </method>
   </version>
 </atomicComponent>

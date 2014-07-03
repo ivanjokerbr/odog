@@ -10,7 +10,7 @@ package odog.design;
 import odog.editor.ArtifactEditors.ArtifactEditor.EditorType;
 import java.net.URL;
 import java.util.Date;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -34,7 +34,7 @@ public class Artifact extends MetaArtifact {
         elementType = etype;
         
         dependsOn = new LinkedList<>();
-        dependsVersions = new Hashtable<>();
+        dependsVersions = new HashMap<>();
     }
 
     public enum ElementType {
@@ -125,5 +125,5 @@ public class Artifact extends MetaArtifact {
     // for a composite component, the artifacts of the instantiated components
     protected LinkedList<Artifact> dependsOn;
     
-    protected Hashtable<Artifact, Date> dependsVersions;
+    protected HashMap<Artifact, Date> dependsVersions;
 }

@@ -27,7 +27,7 @@ public class AtomicComponentGenerator {
         loc = BaseConfiguration.appendSlash(loc) + location;
         fileGenerator =  FileGeneratorParser.parse(loc + file);
      
-        attributes = new LinkedList<String>();
+        attributes = new LinkedList<>();
 
         signals = "";
         initModule = "";
@@ -43,11 +43,11 @@ public class AtomicComponentGenerator {
     // Assigns the name of the associated instance of this component, and add
     // the defines for name substituion of the execution methods
     public void setComponentInstanceName(String name) {
-        String methods = "#define init() " + name + "_init()\n" +
-                "#define compute() " + name + "_compute()\n" +
-                "#define finish() " + name + "_finish()\n" +
-                "#define compute_wraper(a) " + name + "_compute_wraper(a)\n" +
-                "#define fixpoint() " + name + "_fixpoint()\n\n";
+        String methods = "#define odog_init() " + name + "_odog_init()\n" +
+                "#define odog_compute() " + name + "_odog_compute()\n" +
+                "#define odog_finish() " + name + "_odog_finish()\n" +
+                "#define odog_compute_wraper(a) " + name + "_odog_compute_wraper(a)\n" +
+                "#define odog_fixpoint() " + name + "_odog_fixpoint()\n\n";
         
         fileGenerator.setArgumentValue("instanceExecutionMethods", methods);
     }

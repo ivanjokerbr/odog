@@ -54,8 +54,8 @@ public class BaseConfiguration {
     public static final String [] dataTypes = { "integer" , "boolean", "float",
         "double", "object", "byte", "string"};
 
-    public static final String [] executionMethods = { "init", "fixpoint", "compute",
-        "finish" };
+    public static final String [] executionMethods = { "odog_init", "odog_fixpoint", "odog_compute",
+        "odog_finish" };
     
     ///////////////////////////////// PUBLIC METHODS ///////////////////////////
 

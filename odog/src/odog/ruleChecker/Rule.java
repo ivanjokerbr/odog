@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -80,7 +80,7 @@ public class Rule {
         if(DEBUG) {
             System.out.println("Checking " + getName());
         } 
-        result = checkFrom(model, new Hashtable(), tree);
+        result = checkFrom(model, new HashMap(), tree);
     }
 
     public boolean getResult() {
@@ -128,7 +128,7 @@ public class Rule {
         
     }
     // O ultimo valor de retorno eh o da expressao
-    private boolean checkFrom(GraphModel model, Hashtable varNodeTable, 
+    private boolean checkFrom(GraphModel model, HashMap varNodeTable, 
             DefaultMutableTreeNode root) {
 
         TreeNode tn = null;
@@ -406,7 +406,7 @@ public class Rule {
                 String [] arguments = funcCall.getArguments();
                 String [] parameters = funcDef.getArguments();
 
-                Hashtable parametersTable = new Hashtable();
+                HashMap parametersTable = new HashMap();
                 for(int j = 0;j < arguments.length;j++) {
                     Node node = (Node) varNodeTable.get(arguments[j]);
                     if(node == null) {
@@ -443,7 +443,7 @@ public class Rule {
     // especificado pelo nome completo, ou por uma variavel de um quantificador
     
     // this method alters the error message list
-    private void processNodeRef(TreeNode tn, GraphModel model, Hashtable varNodeTable) {
+    private void processNodeRef(TreeNode tn, GraphModel model, HashMap varNodeTable) {
         NodeRef ref = (NodeRef) tn;
         
         // Procura primeiro na tabela de variaveis livres de quantificadores
@@ -468,7 +468,7 @@ public class Rule {
 
     // this method alters the errorMessage list
     private void processAttributeSpecification(DefaultMutableTreeNode attrN, GraphModel model,
-            Hashtable varNodeTable) {
+            HashMap varNodeTable) {
         DefaultMutableTreeNode child = (DefaultMutableTreeNode) attrN.getChildAt(0);
         AttributeSpecification ats = (AttributeSpecification) attrN.getUserObject();       
         TreeNode tnchild = (TreeNode) child.getUserObject();
@@ -769,7 +769,7 @@ public class Rule {
     
     private DefaultMutableTreeNode tree;
     // for the current syntax tree, the associated table of function definitions
-    private Hashtable<String, Function> functionDefs;
+    private HashMap<String, Function> functionDefs;
     
     private LinkedList<String> errorMessages;
     

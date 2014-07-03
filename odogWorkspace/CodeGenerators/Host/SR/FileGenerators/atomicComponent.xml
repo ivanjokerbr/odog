@@ -18,7 +18,7 @@ extern int ]]></text><argument name="containerName"/><text><![CDATA[_zeroTimeEve
 <text>
 
 static int
-numberOfConnections(char *port) {
+odog_numberOfConnections(char *port) {
 </text>
 <argument name="numberOfConnectionsBody"/>
 <text>
@@ -26,7 +26,7 @@ numberOfConnections(char *port) {
 } 
 
 static char *
-nameOfConnection(char *port, int number) {
+odog_nameOfConnection(char *port, int number) {
 </text>
 <argument name="nameOfConnectionBody"/>
 <text><![CDATA[
@@ -34,33 +34,33 @@ nameOfConnection(char *port, int number) {
 }
 
 static void
-receive(char *p1, void **p2, size_t *p3) {
+odog_receive(char *p1, void **p2, size_t *p3) {
 ]]></text>
 <argument name="receiveBody"/>
 <text>
 }
 
 static void
-send(char *p1, void *p2, size_t length) {
+odog_send(char *p1, void *p2, size_t length) {
 </text>
 <argument name="sendBody"/>
 <text><![CDATA[
 }
 
 static void
-sendAll(char *p1, void *p2, size_t length) {
+odog_sendAll(char *p1, void *p2, size_t length) {
 int n, i;
 char *qname;
 
-  n = numberOfConnections(p1);
+  n = odog_numberOfConnections(p1);
   for(i = 0;i < n;i++) {
-      qname = nameOfConnection(p1, i);
-      send(qname, p2, length);
+      qname = odog_nameOfConnection(p1, i);
+      odog_send(qname, p2, length);
   }
 }
 
 static char
-canReceive(char *p1, int p2) {
+odog_canReceive(char *p1, int p2) {
     if(p2 != 1) return 0;
 ]]></text>
 <argument name="canReceiveBody"/>
@@ -69,21 +69,21 @@ canReceive(char *p1, int p2) {
 }
 
 static char
-canReceiveAll(char *p1, int p2) {
+odog_canReceiveAll(char *p1, int p2) {
 int i, n;
 char *qname;
     if(p2 != 1) return 0;
 
-    n = numberOfConnections(p1);
+    n = odog_numberOfConnections(p1);
     for(i = 0;i < n;i++) {
-        qname = nameOfConnection(p1, i);
-        if(canReceive(qname, p2) == 0) return 0;
+        qname = odog_nameOfConnection(p1, i);
+        if(odog_canReceive(qname, p2) == 0) return 0;
     }
     return 1;
 }
 
 static char
-canSend(char *p1, int p2) {
+odog_canSend(char *p1, int p2) {
     if(p2 != 1) return 0;
 ]]></text>
 <argument name="canSendBody"/>
@@ -92,41 +92,41 @@ canSend(char *p1, int p2) {
 }
 
 static char
-canSendAll(char *p1, int p2) {
+odog_canSendAll(char *p1, int p2) {
 int i, n;
 char *qname;
 
     if(p2 != 1) return 0;
 
-    n = numberOfConnections(p1);
+    n = odog_numberOfConnections(p1);
     for(i = 0;i < n;i++) {
-        qname = nameOfConnection(p1, i);
-        if(canSend(qname, p2) == 0) return 0;
+        qname = odog_nameOfConnection(p1, i);
+        if(odog_canSend(qname, p2) == 0) return 0;
     }
     return 1; 
 }
 
 static void
-setAbsent(char *p1) {
+odog_setAbsent(char *p1) {
 ]]></text>
 <argument name="setAbsentBody"/>
 <text><![CDATA[
 }
 
 static void
-setAbsentAll(char *p1) {
+odog_setAbsentAll(char *p1) {
     int i, n;
     char *qname;
    
-    n = numberOfConnections(p1);
+    n = odog_numberOfConnections(p1);
     for(i = 0;i < n;i++) {
-        qname = nameOfConnection(p1, i);
-        setAbsent(qname);
+        qname = odog_nameOfConnection(p1, i);
+        odog_setAbsent(qname);
     }
 }
 
 static char
-isAbsent(char *p1) {
+odog_isAbsent(char *p1) {
 ]]></text>
 <argument name="isAbsentBody"/>
 <text><![CDATA[
@@ -134,14 +134,14 @@ isAbsent(char *p1) {
 }
 
 static char
-isAbsentAll(char *p1) {
+odog_isAbsentAll(char *p1) {
 int i,n;
 char *qname;
 
-    n = numberOfConnections(p1);
+    n = odog_numberOfConnections(p1);
     for(i = 0;i < n;i++) {
-        qname = nameOfConnection(p1, i);
-        if(isAbsent(qname) == 0) return 0;
+        qname = odog_nameOfConnection(p1, i);
+        if(odog_isAbsent(qname) == 0) return 0;
     }
     return 1; 
 }
@@ -150,21 +150,21 @@ static void
 printPortState(char *port, char input) {
 int i;
 
-   printf("State of port %s(%d)\n", port, numberOfConnections(port));
-   for(i = 0;i < numberOfConnections(port);i++) {
-       char *con = nameOfConnection(port, i);
+   printf("State of port %s(%d)\n", port, odog_numberOfConnections(port));
+   for(i = 0;i < odog_numberOfConnections(port);i++) {
+       char *con = odog_nameOfConnection(port, i);
        printf("  %s => ", con);
        if(input == 1) {
-           if(canReceive(con, 1)) {
+           if(odog_canReceive(con, 1)) {
                printf(" known ");
-              if(isAbsent(con)) printf(" absent");
+              if(odog_isAbsent(con)) printf(" absent");
            }
            else printf(" unknown");
        }
        else {
-           if(!canSend(con, 1)) {
+           if(!odog_canSend(con, 1)) {
                printf(" known ");
-               if(isAbsent(con)) printf(" absent");
+               if(odog_isAbsent(con)) printf(" absent");
            }
            else printf(" unknown");
        }

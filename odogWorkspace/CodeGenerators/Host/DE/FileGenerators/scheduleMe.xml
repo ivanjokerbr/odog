@@ -3,6 +3,6 @@
 
 <fileGenerator>
 
-<argument name="name"/><text>_scheduleMe(</text><argument name="componentID"/><text>,</text><argument name="arg0"/><text>);</text>
+<argument name="name"/><text>_odog_scheduleMe(</text><argument name="componentID"/><text>,</text><argument name="arg0"/><text>);</text>
 
 </fileGenerator>

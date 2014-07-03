@@ -13,7 +13,7 @@ import odog.syntax.Nodes.Connection;
 import odog.syntax.Nodes.ExportedPort;
 import odog.syntax.Nodes.Topology;
 import odog.syntax.Nodes.Value;
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  *
@@ -22,7 +22,7 @@ import java.util.Hashtable;
 public class SRDEBoundary extends BoundaryData {
     
     public SRDEBoundary(String outsideSignal, ExportedPort port, Connection c,
-            int prio, Topology containerTopology, Hashtable<Attr,Value> attrValueMap) {
+            int prio, Topology containerTopology, HashMap<Attr,Value> attrValueMap) {
         super(outsideSignal, port, c, containerTopology, BoundaryType.SRDE, 
                 attrValueMap, BoundaryDirection.OUTPUT);
         this.destNodePriority = prio;
